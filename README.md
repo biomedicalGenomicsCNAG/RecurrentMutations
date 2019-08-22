@@ -15,7 +15,7 @@
 
 ![alt text](Clustering/Fig3.png)
 
-<p>An interactive <strong>3D version of the PCA</strong> plotted in the Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
+<p><em>Note</em>: An interactive <strong>3D version of the PCA</strong> plotted in the Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
 
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
@@ -23,11 +23,11 @@
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
-<h4>METHOD</h4> 
+<h4>METHOD:</h4> [Description of the method](SequenceContext/Readme.md)
 
 [Description of the method](SequenceContext/Readme.md)
 
-<h4>DATA</h4> 
+<h4>DATA:</h4> 
 
 <h5>Cluster A (C>A mutations):</h5>
 
@@ -75,7 +75,7 @@
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_unique_T_G_21positions.txt))<br>
 
 
-<h4>CODE</h4> 
+<h4>CODE:</h4> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
 
 [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
 
