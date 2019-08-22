@@ -8,19 +8,19 @@ The sheer size of the human genome makes it improbable that identical somatic mu
 <h2>Main Figures</h2>
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
-
+<br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
-
+<br>
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
 
 ![alt text](Clustering/Fig3.png)
 
 <p>An interactive <strong>3D version of the PCA</strong> plotted in the Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
 
-<h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
-<p></p>
+<br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
+
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
 <h4>METHOD</h4> 
