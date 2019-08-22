@@ -13,7 +13,7 @@ The sheer size of the human genome makes it improbable that identical somatic mu
 
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
 
-![alt text](figure_3_sizeA4_plos_manuscript.png)
+![alt text](Clustering/Fig3.png)
 
 <p>An interactive <strong>3D version of the PCA</strong> plotted in the Step 3 of the workflow is available <a href="https://plot.ly/~andieguez/1/#/">here</a>.</p>
 
