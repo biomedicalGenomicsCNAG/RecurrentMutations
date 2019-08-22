@@ -90,7 +90,7 @@ The sheer size of the human genome makes it improbable that identical somatic mu
 Data: [Clustering Tree](example_script.R)<br>
 *Table providing blabla...*
 
-
+<br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
 
 <h4>METHOD</h4>
@@ -134,24 +134,25 @@ Data: [Clustering Tree](example_script.R)<br>
 ---
 
 <h4>S1 Table. Tumour type abbreviation, full name and number of samples.</h4>
-
+<br>
 <h4>S2 Table. Recurrence in pan-cancer context and within tumour type(s).</h4>
 
 ---
 
 <h4>S1 Text. Estimation of the levels of recurrence when purely driven by chance.</h4>
 
->Data: [summary Table of simulations](example_script.R)
+>Data: [summary Table of simulations](example_script.R)<br>
 >Code: [simulations_stats_script](example_script.R)
 
+<br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
-
+<br>
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
-
+<br>
 <h4>S4 Text. Smoking history and related mutational subtypes.</h4>
 
 ---
 
 <h4>S1 File. Characteristic plots summarising each of the 42 features.</h4>
-
+<br>
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
