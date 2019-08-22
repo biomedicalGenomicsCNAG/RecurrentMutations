@@ -22,7 +22,7 @@ The sheer size of the human genome makes it improbable that identical somatic mu
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
-<h4>METHODS</h4> 
+<h4>[METHODS](SequenceContext/Readme.md)</h4> 
 
 [Description](SequenceContext/Readme.md)
 
