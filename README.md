@@ -22,10 +22,10 @@ The sheer size of the human genome makes it improbable that identical somatic mu
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
-<h5>METHODS</h5> 
-[Description](SequenceContext/Readme.md)
+<h4>METHODS</h4> 
+![Description](SequenceContext/Readme.md)
 
-<h5>DATA</h5> 
+<h4>DATA</h4> 
 
 <h5>Cluster A (C>A mutations):</h5>
 
@@ -73,7 +73,7 @@ The sheer size of the human genome makes it improbable that identical somatic mu
     * Unique mutations ([TXT file](example_script.R))<br>
 
 
-<h5>CODE</h5> 
+<h4>CODE</h4> 
 
 [SequenceLogos_script](example_script.R)
 
