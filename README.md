@@ -27,7 +27,6 @@ The sheer size of the human genome makes it improbable that identical somatic mu
 
 [Description of the method](SequenceContext/Readme.md)
 
-<br>
 <h4>DATA</h4> 
 
 <h5>Cluster A (C>A mutations):</h5>
@@ -75,7 +74,7 @@ The sheer size of the human genome makes it improbable that identical somatic mu
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_unique_T_G_21positions.txt))<br>
 
-<br>
+
 <h4>CODE</h4> 
 
 [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
