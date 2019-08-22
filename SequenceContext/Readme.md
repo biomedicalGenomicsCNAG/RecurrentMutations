@@ -1,6 +1,7 @@
 <H3>Detection and enrichment of motifs</H3>
 
-We collected for clusters A, E, G, H, L and M all SSMs of the subtype that is the most characteristic. This is C>A for clusters A and H, C>G for cluster E, C>T for cluster G, T>G for cluster L and C>G for cluster M. In addition, we looked at T>G SSMs in cluster H to compare to cluster L. Next, we extracted from the reference genome (GRCh37/h19) the ten adjacent bases in 5’ and 3’ direction of the mutation using the Rsamtools package. We used the extracted sequence context as input to construct two sequence logos per cluster: one for the mutations that are recurrent within the cluster and one for those that are not. As a measure of information content we used the relative entropy [50, 51], which is defined for position <em>i</em> by:
+<p style="text-align: center;">Center-aligned
+We collected for clusters A, E, G, H, L and M all SSMs of the subtype that is the most characteristic. This is C>A for clusters A and H, C>G for cluster E, C>T for cluster G, T>G for cluster L and C>G for cluster M. In addition, we looked at T>G SSMs in cluster H to compare to cluster L. Next, we extracted from the reference genome (GRCh37/h19) the ten adjacent bases in 5’ and 3’ direction of the mutation using the Rsamtools package. We used the extracted sequence context as input to construct two sequence logos per cluster: one for the mutations that are recurrent within the cluster and one for those that are not. As a measure of information content we used the relative entropy [50, 51], which is defined for position <em>i</em> by:</p>
 
 RE<sub>i</sub>=∑_<sub>b ∈{A,C,G,T}</sub>)f(b<sub>i</sub>) log_2  (f(b_i))/(P(b))
 
