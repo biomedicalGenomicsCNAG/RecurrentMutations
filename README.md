@@ -75,9 +75,11 @@
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_unique_T_G_21positions.txt))<br>
 
 
-<h4>CODE:</h4> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
+<h4>CODE:</h4>
 
 [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
+
+<p><strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R) </p>
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
