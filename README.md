@@ -23,11 +23,9 @@
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
-<h4>METHOD:</h4> [Description of the method](SequenceContext/Readme.md)
+<strong>METHOD:</strong> ([Description](SequenceContext/Readme.md)) <br>
 
-[Description of the method](SequenceContext/Readme.md)
-
-<h4>DATA:</h4> 
+<strong>DATA:</strong>
 
 <h5>Cluster A (C>A mutations):</h5>
 
@@ -74,11 +72,6 @@
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_unique_T_G_21positions.txt))<br>
 
-
-<h4>CODE:</h4>
-
-[SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
-
 <strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
 
 <br>
@@ -95,11 +88,10 @@ Data: [Clustering Tree](example_script.R)<br>
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
 
-<h4>METHOD</h4>
+<strong>METHOD:</strong> ([Description](SequenceContext/Readme.md)) <br>
 
-[Description of the method](SequenceContext/Readme.md)
+<strong>DATA:</strong>
 
-<h4>DATA</h4>
 <h5>Cluster M (C>G mutations):</h5>
 
 * Nucleotide counts per position in the sequence:<br> 
@@ -109,17 +101,15 @@ Data: [Clustering Tree](example_script.R)<br>
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_M_rec_C_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_M_unique_C_G_21positions.txt))<br>
 
-<h4>CODE</h4>
-[SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
+<strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
 
 
 <h4>S3 Figure. Enriched sequence motifs for T>G SSMs in cluster H.</h4>
 
-<h4>METHOD</h4>
+<strong>METHOD:</strong> ([Description](SequenceContext/Readme.md)) <br>
 
-[Description of the method](SequenceContext/Readme.md)
+<strong>DATA:</strong>
 
-<h4>DATA</h4>
 <h5>Cluster H (T>G mutations):</h5>
 
 * Nucleotide counts per position in the sequence:<br> 
@@ -129,9 +119,7 @@ Data: [Clustering Tree](example_script.R)<br>
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_H_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_H_unique_T_G_21positions.txt))<br>
 
-<h4>CODE</h4> 
-
-[SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
+<strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
 
 ---
 
