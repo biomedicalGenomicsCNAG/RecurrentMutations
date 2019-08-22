@@ -79,7 +79,7 @@
 
 [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)
 
-<p><strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R) </p>
+<strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
