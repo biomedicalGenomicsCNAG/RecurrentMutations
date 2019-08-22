@@ -132,6 +132,11 @@ Data: [Clustering Tree](example_script.R)<br>
 
 <h4>S1 Text. Estimation of the levels of recurrence when purely driven by chance.</h4>
 
+<strong>METHOD:</strong> ([Description](Simulations/Readme.md)) <br>
+
+<strong>DATA:</strong>
+<strong>DATA:</strong>
+
 >Data: [summary Table of simulations](example_script.R)<br>
 >Code: [simulations_stats_script](example_script.R)
 
