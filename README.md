@@ -125,17 +125,17 @@ Data: [Clustering Tree](example_script.R)<br>
 ---
 
 <h4>S1 Table. Tumour type abbreviation, full name and number of samples.</h4>
-<br>
+
 <h4>S2 Table. Recurrence in pan-cancer context and within tumour type(s).</h4>
 
 ---
 
 <h4>S1 Text. Estimation of the levels of recurrence when purely driven by chance.</h4>
 
-<strong>METHOD:</strong> ([Description](Simulations/Readme.md)) <br>
+<strong>METHOD:</strong> ([Description](Simulations/README.md)) <br>
 
-<strong>DATA:</strong>
-<strong>DATA:</strong>
+<strong>DATA:</strong><br>
+<strong>code:</strong>
 
 >Data: [summary Table of simulations](example_script.R)<br>
 >Code: [simulations_stats_script](example_script.R)
@@ -150,5 +150,5 @@ Data: [Clustering Tree](example_script.R)<br>
 ---
 
 <h4>S1 File. Characteristic plots summarising each of the 42 features.</h4>
-<br>
+
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
