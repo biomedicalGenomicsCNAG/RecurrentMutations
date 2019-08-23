@@ -15,7 +15,7 @@
 
 ![alt text](Clustering/Fig3.png)
 
-<p><em>Note</em>: An interactive <strong>3D version of the PCA</strong> plotted in the Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
+<p><em>Note</em>: An interactive <strong>3D version of the PCA plot</strong> shown in Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
 
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
