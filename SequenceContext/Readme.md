@@ -10,5 +10,3 @@
 
 50.	Schneider TD, Stormo GD, Gold L, Ehrenfeucht A. Information content of binding sites on nucleotide sequences. <em>J Mol Biol</em>. 1986;188(3):415-31. doi: 10.1016/0022-2836(86)90165-8.<br>
 51.	Kullback S, Leibler RA. On Information and Sufficiency. <em>Ann Math Statist</em>. 1951;22(1):79-86.
-
-We collected for clusters A, E, G, H, L and M all SSMs of the subtype that is the most characteristic.
