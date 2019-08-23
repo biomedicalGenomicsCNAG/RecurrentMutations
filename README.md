@@ -135,7 +135,11 @@ Data: [Clustering Tree](example_script.R)<br>
 <strong>METHOD:</strong> ([Description](Simulations/README.md)) <br>
 
 <strong>DATA:</strong><br>
-<strong>code:</strong>
+
+* Nucleotide counts per position in the sequence:<br> 
+    * Recurrent mutations ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<br>
+
+<strong>CODE:</strong> ([to fill in](SequenceContext/Code/SequenceLogos_script.R)) <br>
 
 >Data: [summary Table of simulations](example_script.R)<br>
 >Code: [simulations_stats_script](example_script.R)
