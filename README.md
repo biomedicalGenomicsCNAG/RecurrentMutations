@@ -136,13 +136,12 @@ Data: [Clustering Tree](example_script.R)<br>
 
 <strong>DATA:</strong><br>
 
-* Nucleotide counts per position in the sequence:<br> 
-    * Recurrent mutations ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<br>
+* Summary tables of 5000 simulations:<br> 
+    * Pan-cancer and within tumour type ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<br>
+    * Per substitution type ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<br>
+    * Overall ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<b
 
 <strong>CODE:</strong> ([to fill in](SequenceContext/Code/SequenceLogos_script.R)) <br>
-
->Data: [summary Table of simulations](example_script.R)<br>
->Code: [simulations_stats_script](example_script.R)
 
 <br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
