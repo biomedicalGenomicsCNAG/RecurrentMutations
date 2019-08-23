@@ -177,7 +177,7 @@ SequenceLogo21 <- function(file, length_aroundMut, threshold, group, subtype, se
 
 
 
-## CALL THE FUNCTION: Example for recurrent C>T mutations in Cluster C.
+## CALL THE FUNCTION: Example for recurrent C>T mutations in Cluster G.
 
 length_aroundMut <- 10
 threshold <- 0.25
