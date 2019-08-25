@@ -38,6 +38,7 @@
 <strong>DATA:</strong><br>
 
 * Piediagram ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt)) <br>
+* Number of SSMs and SIMs ([RData](Clustering/Data/sample2num_mut.RData) | [TXT file](Clustering/Data/sample2num_mut.txt)) <br>
 * Key characteristics and overall association to recurrence: HCPC object ([RData](Clustering/Data/res_hcpc.RData))
 
 <br>
