@@ -46,7 +46,7 @@
 <br>
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
-
+   
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
@@ -176,14 +176,16 @@
 <br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
 <br>
-<strong>DATA:</strong> statistics in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](~/Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+<strong>DATA:</strong> features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
    
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
 <br>
+<strong>DATA:</strong> features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 <h4>S4 Text. Smoking history and related mutational subtypes.</h4>
 
 ---
 
 <h4>S1 File. Characteristic plots summarising each of the 42 features.</h4>
+<strong>DATA:</strong> features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
