@@ -140,15 +140,16 @@
 <strong>DATA:</strong><br>
 
 * Summary tables of 5000 simulations:<br> 
-    * Pan-cancer and within tumour type ([RData pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.RData) | [TXT file pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.txt)) ([RData within](Simulations/Data/recurrence_tumourtype_within_5000simul.RData) | [TXT file within](Simulations/Data/recurrence_tumourtype_within_5000simul.txt))<br>
-    * Per substitution type ([RData](Simulations/Data/a.RData) | [TXT file](Simulations/Data/a.txt))<br>
-    * Overall ([RData](Simulations/Data/recurrence_overall_5000simul.RData) | [TXT file](Simulations/Data/recurrence_overall_5000simul.txt))<br>
+    * Recurrence pan-cancer per tumour type ([RData](Simulations/Data/recurrence_tumortype_pancancer_5000simul.RData) | [TXT file](Simulations/Data/recurrence_tumortype_pancancer_5000simul.txt))<br>
+    * Recurrence within tumour type ([RData](Simulations/Data/recurrence_tumortype_within_5000simul.RData) | [TXT file](Simulations/Data/recurrence_tumortype_within_5000simul.txt))<br>
+    * Recurrence per substitution type ([RData](Simulations/Data/recurrence_subtype_5000simul.RData) | [TXT file](Simulations/Data/recurrence_subtype_5000simul.txt))<br>
+    * Overall recurrence ([RData](Simulations/Data/recurrence_overall_5000simul.RData) | [TXT file](Simulations/Data/recurrence_overall_5000simul.txt))<br>
 
 <strong>CODE:</strong><br>
 
 * [Performance of simulations](Simulations/Code/sim-all-cancers.R) <br>
-* [Summarize per tumour type](Simulations/Code/summarise.R)<br>
-* [Summarize per substitution type](Simulations/Code/summarise-mut-type.R)<br>
+* [Summarise per tumour type](Simulations/Code/summarise.R)<br>
+* [Summarise per substitution type](Simulations/Code/summarise-mut-type.R)<br>
 * [Boxplot representation](Simulations/Code/representation-simulations.R)<br>
 
 <br>
