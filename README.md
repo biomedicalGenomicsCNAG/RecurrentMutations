@@ -8,6 +8,9 @@
 <h2>Main Figures</h2>
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
+
+<strong>DATA:</strong> ([Summary table](More_data/.txt)) <br>
+
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
 <br>
@@ -82,8 +85,10 @@
 
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
-Data: [Clustering Tree](example_script.R)<br>
-*Table providing blabla...*
+<strong>DATA:</strong> ([Clustering Tree](More_data/.txt)) <br>
+
+Data: [Clustering Tree](HierarchClust20_sample2clust.R)<br>
+*Table providing the distribution of samples at different cluster resolutions (from 2 to 20 clusters)*
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
@@ -137,11 +142,16 @@ Data: [Clustering Tree](example_script.R)<br>
 <strong>DATA:</strong><br>
 
 * Summary tables of 5000 simulations:<br> 
-    * Pan-cancer and within tumour type ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<br>
-    * Per substitution type ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<br>
-    * Overall ([RData](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.RData) | [TXT file](SequenceContext/Data/Counts/SeqContext_counts_cluster_H_rec_T_G_21positions.txt))<b
+    * Pan-cancer and within tumour type ([RData Pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.RData) | [TXT file Pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.txt)) ([RData Within](Simulations/Data/recurrence_tumourtype_within_5000simul.RData) | [TXT file Within](Simulations/Data/recurrence_tumourtype_within_5000simul.txt))<br>
+    * Per substitution type ([RData](Simulations/Data/a.RData) | [TXT file](Simulations/Data/a.txt))<br>
+    * Overall ([RData](Simulations/Data/recurrence_overall_5000simul.RData) | [TXT file](Simulations/Data/recurrence_overall_5000simul.txt))<br>
 
-<strong>CODE:</strong> ([to fill in](SequenceContext/Code/SequenceLogos_script.R)) <br>
+<strong>CODE:</strong><br>
+
+* [Performance of simulations](Simulations/Code/sim-all-cancers.R) <br>
+* [Summarize per tumour type](Simulations/Code/summarise.R)<br>
+* [Summarize per substitution type](Simulations/Code/summarise-mut-type.R)<br>
+* [Boxplot representation](Simulations/Code/representation-simulations.R)<br>
 
 <br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
