@@ -9,7 +9,7 @@
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
 
-<strong>DATA:</strong> ([Table](Recurrence/recurrence_tumortype_ssms_sims.txt)) <br>
+<strong>DATA:</strong> [TXT table](Recurrence/recurrence_tumortype_ssms_sims.txt) <br>
 
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
@@ -26,7 +26,7 @@
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
-<strong>METHOD:</strong> ([Description](SequenceContext/Readme.md)) <br>
+<strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
 
@@ -75,7 +75,7 @@
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_unique_T_G_21positions.txt))<br>
 
-<strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
+<strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R) <br>
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
@@ -85,13 +85,13 @@
 
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
-<strong>DATA:</strong> ([Clustering Tree (table)](Clustering/Data/HierarchClust20_sample2clust.txt)) <br>
+<strong>DATA:</strong> [Clustering Tree (table)](Clustering/Data/HierarchClust20_sample2clust.txt) <br>
 *Table providing the distribution of samples at different cluster resolutions (from 2 to 20 clusters)*
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
 
-<strong>METHOD:</strong> ([Description](SequenceContext/Readme.md)) <br>
+<strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
 
@@ -104,13 +104,13 @@
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_M_rec_C_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_M_unique_C_G_21positions.txt))<br>
 
-<strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
+<strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)<br>
 
 <br>
 
 <h4>S3 Figure. Enriched sequence motifs for T>G SSMs in cluster H.</h4>
 
-<strong>METHOD:</strong> ([Description](SequenceContext/Readme.md)) <br>
+<strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
 
@@ -123,7 +123,7 @@
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_H_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_H_unique_T_G_21positions.txt))<br>
 
-<strong>CODE:</strong> ([SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)) <br>
+<strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R) <br>
 
 ---
 
@@ -135,7 +135,7 @@
 
 <h4>S1 Text. Estimation of the levels of recurrence when purely driven by chance.</h4>
 
-<strong>METHOD:</strong> ([Description](Simulations/README.md)) <br>
+<strong>METHOD:</strong> [Description](Simulations/README.md) <br>
 
 <strong>DATA:</strong><br>
 
