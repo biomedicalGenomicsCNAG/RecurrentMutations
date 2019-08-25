@@ -38,7 +38,7 @@
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
-<strong>DATA:</strong> The 42 features used to compute the correlation ([RData](Clustering/Data/samples2features4corr.RData) | [TXT file](Clustering/Data/samples2features4corr.txt))<br>
+
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
