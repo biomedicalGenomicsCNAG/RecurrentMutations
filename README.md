@@ -9,7 +9,7 @@
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
 
-<strong>DATA:</strong> ([Table](Recurrence/recurrence_tumour_type_ssms_sims.txt)) <br>
+<strong>DATA:</strong> ([Table](Recurrence/recurrence_tumourtype_ssms_sims.txt)) <br>
 
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
