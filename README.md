@@ -22,16 +22,16 @@
 
 <strong>DATA:</strong><br>
 
-* PCA ([RData](Clustering/Data/res_pca.RData)<br>
-* HCPC ([RData](Clustering/Data/res_hcpc.RData) <br>
-* Sample features ([RData](Clustering/Data/Step1_sample2features.RData) | [TXT file](Clustering/Data/Step1_sample2features.txt))<br>
-* Sample cluster ([RData](Clustering/Data/Step6_sample2cluster.RData) | [TXT file](Clustering/Data/Step6_sample2cluster.txt))<br>
-* Sample annotation ([RData](Clustering/Data/Step7_sample2annotation.RData) | [TXT file](Clustering/Data/Step7_sample2annotation.txt))<br>
+* PCA ([RData](Clustering/Data/res_pca.RData))<br>
+* HCPC ([RData](Clustering/Data/res_hcpc.RData))<br>
+* Sample features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
+* Sample cluster ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
+* Sample annotation ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
 
 * [codetitlehere](Clustering/Code/aaa.R) <br>
-* [ifmorecodetitlehere](Clustering/Code/summarise.R)<br>
+* [ifmorecodetitlehere](Clustering/Code/bbb.R)<br>
 
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
