@@ -85,7 +85,7 @@
 
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
-<strong>DATA:</strong> [Clustering Tree (table)](Clustering/Data/HierarchClust20_sample2clust.txt) <br>
+<strong>DATA:</strong> [Clustering Tree (TXT table)](Clustering/Data/HierarchClust20_sample2clust.txt) <br>
 *Table providing the distribution of samples at different cluster resolutions (from 2 to 20 clusters)*
 
 <br>
