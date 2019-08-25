@@ -13,6 +13,9 @@
 
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
+
+<strong>DATA:</strong> The 42 features used to compute the correlation ([RData](Clustering/Data/samples2features4corr.RData) | [TXT file](Clustering/Data/samples2features4corr.txt))<br>
+
 <br>
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
 
@@ -22,11 +25,10 @@
 
 <strong>DATA:</strong><br>
 
-* PCA ([RData](Clustering/Data/res_pca.RData))<br>
-* HCPC ([RData](Clustering/Data/res_hcpc.RData))<br>
-* Sample features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
-* Sample cluster ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
-* Sample annotation ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
+* Output of Step 1: 42 features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
+* Output of Step 3 and 4: PCA ([RData](Clustering/Data/res_pca.RData))<br>
+* Output of Step 5 and 6: HCPC ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
+* Output of Step 7: Samples annotated with metadata ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
 
@@ -36,6 +38,7 @@
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
+<strong>DATA:</strong> The 42 features used to compute the correlation ([RData](Clustering/Data/samples2features4corr.RData) | [TXT file](Clustering/Data/samples2features4corr.txt))<br>
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
