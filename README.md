@@ -20,6 +20,19 @@
 
 <p><em>Note</em>: An interactive <strong>3D version of the PCA plot</strong> shown in Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
 
+<strong>DATA:</strong><br>
+
+* PCA ([RData](Clustering/Data/res_pca.RData)<br>
+* HCPC ([RData](Clustering/Data/res_hcpc.RData) <br>
+* Sample features ([RData](Clustering/Data/Step1_sample2features.RData) | [TXT file](Clustering/Data/Step1_sample2features.txt))<br>
+* Sample cluster ([RData](Clustering/Data/Step6_sample2cluster.RData) | [TXT file](Clustering/Data/Step6_sample2cluster.txt))<br>
+* Sample annotation ([RData](Clustering/Data/Step7_sample2annotation.RData) | [TXT file](Clustering/Data/Step7_sample2annotation.txt))<br>
+
+<strong>CODE:</strong><br>
+
+* [codetitlehere](Clustering/Code/aaa.R) <br>
+* [ifmorecodetitlehere](Clustering/Code/summarise.R)<br>
+
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
