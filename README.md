@@ -32,20 +32,17 @@
 
 <strong>CODE:</strong><br>
 
-* [codetitlehere](Clustering/Code/aaa.R) <br>
-* [ifmorecodetitlehere](Clustering/Code/bbb.R)<br>
-
 <br>
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
 <br>
 <strong>DATA:</strong><br>
-* Piediagram: ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
+
+* Piediagram ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt)) <br>
 * Key characteristics and overall association to recurrence: HCPC object ([RData](Clustering/Data/res_hcpc.RData))
 
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
-
 
 <h4>Fig 5. Enriched sequence motifs</h4> 
 
