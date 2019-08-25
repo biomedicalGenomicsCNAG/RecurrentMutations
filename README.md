@@ -9,7 +9,7 @@
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
 
-<strong>DATA:</strong> ([Summary table](More_data/.txt)) <br>
+<strong>DATA:</strong> ([Table](More_data/.txt)) <br>
 
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
@@ -85,9 +85,7 @@
 
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
-<strong>DATA:</strong> ([Clustering Tree](More_data/.txt)) <br>
-
-Data: [Clustering Tree](HierarchClust20_sample2clust.R)<br>
+<strong>DATA:</strong> ([Clustering Tree (table)](Clustering/HierarchClust20_sample2clust.txt)) <br>
 *Table providing the distribution of samples at different cluster resolutions (from 2 to 20 clusters)*
 
 <br>
@@ -142,7 +140,7 @@ Data: [Clustering Tree](HierarchClust20_sample2clust.R)<br>
 <strong>DATA:</strong><br>
 
 * Summary tables of 5000 simulations:<br> 
-    * Pan-cancer and within tumour type ([RData Pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.RData) | [TXT file Pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.txt)) ([RData Within](Simulations/Data/recurrence_tumourtype_within_5000simul.RData) | [TXT file Within](Simulations/Data/recurrence_tumourtype_within_5000simul.txt))<br>
+    * Pan-cancer and within tumour type ([RData pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.RData) | [TXT file pan-cancer](Simulations/Data/recurrence_tumourtype_pancancer_5000simul.txt)) ([RData within](Simulations/Data/recurrence_tumourtype_within_5000simul.RData) | [TXT file within](Simulations/Data/recurrence_tumourtype_within_5000simul.txt))<br>
     * Per substitution type ([RData](Simulations/Data/a.RData) | [TXT file](Simulations/Data/a.txt))<br>
     * Overall ([RData](Simulations/Data/recurrence_overall_5000simul.RData) | [TXT file](Simulations/Data/recurrence_overall_5000simul.txt))<br>
 
