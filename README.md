@@ -26,8 +26,8 @@
 <strong>DATA:</strong><br>
 
 * Output of Step 1: 42 features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
-* Output of Step 3 and 4: PCA ([RData](Clustering/Data/res_pca.RData))<br>
-* Output of Step 5 and 6: HCPC ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
+* Output of Step 3 and 4: PCA object ([RData](Clustering/Data/res_pca.RData))<br>
+* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
 * Output of Step 7: Samples annotated with metadata ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
