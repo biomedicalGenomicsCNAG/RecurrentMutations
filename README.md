@@ -14,7 +14,7 @@
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
 
-<strong>DATA:</strong> The 42 features used to compute the correlation ([RData](Clustering/Data/samples2features4corr.RData) | [TXT file](Clustering/Data/samples2features4corr.txt))<br>
+<strong>DATA:</strong> The 42 features used to compute the correlation ([RData](Clustering/Data/sample2features4corr.RData) | [TXT file](Clustering/Data/sample2features4corr.txt))<br>
 
 <br>
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
@@ -27,7 +27,7 @@
 
 * Output of Step 1: 42 features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
 * Output of Step 3 and 4: PCA object ([RData](Clustering/Data/res_pca.RData))<br>
-* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt))<br>
+* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
 * Output of Step 7: Samples annotated with metadata ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
@@ -37,7 +37,7 @@
 <br>
 <strong>DATA:</strong><br>
 
-* Piediagram ([RData](Clustering/Data/step6_sample2cluster.RData) | [TXT file](Clustering/Data/step6_sample2cluster.txt)) <br>
+* Piediagram ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt)) <br>
 * Number of SSMs and SIMs ([RData](Clustering/Data/sample2num_mut.RData) | [TXT file](Clustering/Data/sample2num_mut.txt)) <br>
 * Key characteristics and overall association to recurrence: HCPC object ([RData](Clustering/Data/res_hcpc.RData))
 
