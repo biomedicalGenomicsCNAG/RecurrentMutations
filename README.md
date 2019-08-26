@@ -30,7 +30,7 @@
 
 * Output of Step 1: 42 features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
 * Output of Step 3 and 4: PCA object ([RData](Clustering/Data/res_pca.RData))<br>
-* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
+* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumour type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
 * Output of Step 7: Samples annotated with metadata ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
@@ -209,7 +209,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
 <strong>CODE:</strong><br>
-Estimate for frequence of homopolymers in the genome ([RScript](Recurrence/Code/S2_Text_Table_STX2_6.R)) <br>
+Estimate for frequency of homopolymers in the genome ([RScript](Recurrence/Code/S2_Text_Table_STX2_6.R)) <br>
    
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
 
@@ -225,4 +225,4 @@ Estimate for frequence of homopolymers in the genome ([RScript](Recurrence/Code/
 
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
 
-<strong>DATA: </strong>Samples linked to cluster and tumor type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
+<strong>DATA: </strong>Samples linked to cluster and tumour type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
