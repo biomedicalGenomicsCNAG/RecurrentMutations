@@ -237,7 +237,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 <BR>   
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
 
-<strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+<strong>DATA: </strong>Features in absolute terms and percentages plus metadata ([RData](Clustering/Data/sample2features2annotation.RData) | [TXT file](Clustering/Data/sample2features2annotation.txt))<br>
 
 <strong>CODE:</strong> <BR>
 * Density plots of the replication time scores ([RScript](Recurrence/Code/S3_Text_Figs_STX3_2_3.R))
