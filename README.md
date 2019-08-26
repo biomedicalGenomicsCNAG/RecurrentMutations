@@ -137,7 +137,6 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
-
 <p align="center">
   <img src="Figures/Fig6.png" width="350" title="">
 </p>
@@ -159,7 +158,6 @@ HCPC objects containing the association of the features to the clusters at a spe
 <p align="center">
   <img src="Figures/S2Fig.png" width="350" title="">
 </p>
-
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
@@ -182,9 +180,8 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <h4>S3 Figure. Enriched sequence motifs for T>G SSMs in cluster H.</h4>
 <p align="center">
-  <img src="Figures/S13Fig.png" width="350" title="">
+  <img src="Figures/S3Fig.png" width="350" title="">
 </p>
-
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
