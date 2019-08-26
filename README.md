@@ -206,7 +206,10 @@ HCPC objects containing the association of the features to the clusters at a spe
 <br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
 
-<strong>DATA:</strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+<strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+
+<strong>CODE:</strong><br>
+Estimate for frequence of homopolymers in the genome ([RScript](Recurrence/Code/S2_Text_Table_STX2_6.R)) <br>
    
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
 
