@@ -186,7 +186,9 @@
 ---
 
 <h4>S1 File. Characteristic plots summarising each of the 42 features.</h4>
+
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
+
 <strong>DATA: </strong>Samples linked to cluster and tumor type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
