@@ -1,7 +1,7 @@
 # Recurrent somatic mutations reveal new insights into consequences of mutagenic processes in cancer
 
 <h4>Abstract</h4>
-<p align="justify">The sheer size of the human genome makes it improbable that identical somatic mutations at the exact same position are observed in multiple tumours solely by chance. The scarcity of cancer driver mutations also precludes positive selection as the sole explanation. Therefore, recurrent mutations may be highly informative of characteristics of mutational processes. To explore the potential, we use recurrence as a starting point to cluster >2,500 whole genomes of a pan-cancer cohort. We describe each genome with 13 recurrence-based and 29 general mutational features. Using principal component analysis we reduce the dimensionality and create independent features. We apply hierarchical clustering to the first 18 principal components followed by k-means clustering. We show that the resulting 16 clusters capture clinically relevant cancer phenotypes. High levels of recurrent substitutions separate the clusters that we link to UV-light exposure and deregulated activity of POLE from the one representing defective mismatch repair, which shows high levels of recurrent insertions/deletions. Recurrence of both mutation types characterizes cancer genomes with somatic hypermutation of immunoglobulin genes and the cluster of genomes exposed to gastric acid. Low levels of recurrence are observed for the cluster where tobacco-smoke exposure induces mutagenesis and the one linked to increased activity of cytidine deaminases. Notably, the majority of substitutions is recurrent in a single tumour type, while recurrent insertions/deletions point to shared processes between tumour types. Recurrence also reveals susceptible sequence motifs, including TT[C>A]TTT and AAC[T>G]T for the POLE and ‘gastric acid-exposure’ clusters, respectively. Moreover, we refine knowledge of mutagenesis, including increased C/G deletion levels in general for lung tumours and specifically in midsize homopolymer sequence contexts for microsatellite instable tumours. Our findings are an important step towards the development of a generic cancer diagnostic test for clinical practice based on whole-genome sequencing that could replace multiple diagnostics currently in use.</p>
+<p align="justify">The sheer size of the human genome makes it improbable that identical somatic mutations at the exact same position are observed in multiple tumours solely by chance. The scarcity of cancer driver mutations also precludes positive selection as the sole explanation. Therefore, recurrent mutations may be highly informative of characteristics of mutational processes. To explore the potential, we use recurrence as a starting point to cluster >2,500 whole genomes of a pan-cancer cohort. We describe each genome with 13 recurrence-based and 29 general mutational features. Using principal component analysis we reduce the dimensionality and create independent features. We apply hierarchical clustering to the first 18 principal components followed by k-means clustering. We show that the resulting 16 clusters capture clinically relevant cancer phenotypes. High levels of recurrent substitutions separate the clusters that we link to UV-light exposure and deregulated activity of POLE from the one representing defective mismatch repair, which shows high levels of recurrent insertions/deletions. Recurrence of both mutation types characterizes cancer genomes with somatic hypermutation of immunoglobulin genes and the cluster of genomes exposed to gastric acid. Low levels of recurrence are observed for the cluster where tobacco-smoke exposure induces mutagenesis and the one linked to increased activity of cytidine deaminases. Notably, the majority of substitutions are recurrent in a single tumour type, while recurrent insertions/deletions point to shared processes between tumour types. Recurrence also reveals susceptible sequence motifs, including TT[C>A]TTT and AAC[T>G]T for the POLE and ‘gastric acid-exposure’ clusters, respectively. Moreover, we refine knowledge of mutagenesis, including increased C/G deletion levels in general for lung tumours and specifically in midsize homopolymer sequence contexts for microsatellite instable tumours. Our findings are an important step towards the development of a generic cancer diagnostic test for clinical practice based on whole-genome sequencing that could replace multiple diagnostics currently in use.</p>
 
 <br>
 
@@ -14,7 +14,10 @@
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
 
-<strong>DATA:</strong>The 42 features used to compute the correlation ([RData](Clustering/Data/sample2features4corr.RData) | [TXT file](Clustering/Data/sample2features4corr.txt))<br>
+<strong>DATA:</strong> The statistics used to compute the correlations in the manuscript, including those in S2 Text. ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+
+<strong>CODE:</strong> Correct p-values for multiple testing and plot correlations for the 42 features ([RScript](Clustering/Code/Fig2_correlationFeatures.R)) <BR> 
+
 
 <br>
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
@@ -38,6 +41,11 @@
 
 <br>
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
+
+<p align="center">
+  <img src="Data/Table1_key_charact_clusters.png" width="350" title="">
+  <img src="Data/Table1_key_charact_clusters.png" width="350" alt="accessibility text">
+</p>
 <strong>DATA:</strong><br>
 
 * Piediagram ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt)) <br>
@@ -47,7 +55,16 @@
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
+<strong>DATA:</strong><br>
 
+PCA object ([RData](Clustering/Data/res_pca.RData))
+<br>
+All significant associations between features and clusters ([RData](Clustering/Data/descr_var_hcpc.RData))
+<br>
+<br>
+<strong>CODE:</strong><br>
+Correct the p-values for the results of the v tests (features versus clusters) for multiple testing and plot associations ([RScript](Clustering/Code/Fig4_feature_association_2_clusters.R)) <BR> <BR> 
+  
 <h4>Fig 5. Enriched sequence motifs</h4> 
    
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
