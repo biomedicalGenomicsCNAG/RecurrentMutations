@@ -130,7 +130,7 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
 <strong>DATA:</strong> <br>
-Table with the samples and the clusters they are assigned to each cluster resolution (from 2 to 20 clusters) [TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
+Table with the samples and the clusters they are assigned to each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
