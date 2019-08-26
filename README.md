@@ -116,7 +116,10 @@ Correct the p-values for the results of the v tests (features versus clusters) f
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_L_unique_T_G_21positions.txt))<br>
 
-<strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R) <br>
+<strong>CODE:</strong> <BR>
+* Add sequence context to SSMs and collect mutation of a specific subtype of a specific group of sample ([RScript](SequenceContext/Code/PrepareInput4SequenceLogos.R)) <br>
+* Compute and plot sequence logos ([RScript](SequenceContext/Code/SequenceLogos.R)) <br>
+* Compute statistics for sequence motifs ([RScript](SequenceContext/Code/SequenceMotifsStats.R)) <br>
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
