@@ -38,6 +38,11 @@
 
 <br>
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
+
+<p align="center">
+  <img src="Data/Table1_key_charact_clusters.png" width="350" title="">
+  <img src="Data/Table1_key_charact_clusters.png" width="350" alt="accessibility text">
+</p>
 <strong>DATA:</strong><br>
 
 * Piediagram ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt)) <br>
