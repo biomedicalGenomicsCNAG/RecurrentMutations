@@ -9,6 +9,10 @@
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
 
+<p align="center">
+  <img src="Figures/Fig1.png" width="350" title="">
+</p>
+
 <strong>DATA:</strong> [TXT table](Recurrence/recurrence_tumortype_ssms_sims.txt) <br>
 
 <br>
