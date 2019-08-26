@@ -34,7 +34,6 @@
 
 <br>
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
-<br>
 <strong>DATA:</strong><br>
 
 * Piediagram ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt)) <br>
