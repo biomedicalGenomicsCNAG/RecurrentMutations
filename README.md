@@ -174,12 +174,13 @@
 
 <br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
-<br>
-<strong>DATA:</strong> features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+
+<strong>DATA:</strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
    
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
-<br>
-<strong>DATA:</strong> features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+
+<strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+
 <h4>S4 Text. Smoking history and related mutational subtypes.</h4>
 
 ---
