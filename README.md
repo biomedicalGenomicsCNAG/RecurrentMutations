@@ -9,10 +9,18 @@
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
 
+<p align="center">
+  <img src="Figures/Fig1.png" width="350" title="">
+</p>
+
 <strong>DATA:</strong> [TXT table](Recurrence/recurrence_tumortype_ssms_sims.txt) <br>
 
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
+
+<p align="center">
+  <img src="Figures/Fig2.png" width="350" title="">
+</p>
 
 <strong>DATA:</strong> The statistics used to compute the correlations in the manuscript, including those in S2 Text. ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
@@ -43,9 +51,9 @@
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
 
 <p align="center">
-  <img src="Data/Table1_key_charact_clusters.png" width="350" title="">
-  <img src="Data/Table1_key_charact_clusters.png" width="350" alt="accessibility text">
+  <img src="Figures/Table1_key_charact_clusters.png" width="350" title="">
 </p>
+
 <strong>DATA:</strong><br>
 
 * Piediagram ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt)) <br>
@@ -123,6 +131,10 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
+
+<p align="center">
+  <img src="Figures/Fig6.png" width="350" title="">
+</p>
 
 <br>
 <h2>Supporting Information</h2>
@@ -214,6 +226,11 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
+<strong>CODE:</strong> <BR>
+* Density plots of the replication time scores ([RScript](Recurrence/Code/S3_Text_Figs_STX3_2_3.R))
+* Plot the number of recurrent mutations along the genome for Lymph-BNHL and Lymph-CLL in cluster M. ([RScript](Recurrence/Code/S3_Text_Fig_STX3_17.R)) <br>
+
+<BR>
 <h4>S4 Text. Smoking history and related mutational subtypes.</h4>
 
 ---
@@ -221,7 +238,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 <h4>S1 File. Characteristic plots summarising each of the 42 features.</h4>
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
-
+<BR>
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
 
 <strong>DATA: </strong>Samples linked to cluster and tumour type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
