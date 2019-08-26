@@ -30,7 +30,7 @@
 
 * Output of Step 1: 42 features ([RData](Clustering/Data/step1_sample2features.RData) | [TXT file](Clustering/Data/step1_sample2features.txt))<br>
 * Output of Step 3 and 4: PCA object ([RData](Clustering/Data/res_pca.RData))<br>
-* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumor type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
+* Output of Step 5 and 6: HCPC object ([RData](Clustering/Data/res_hcpc.RData)) and Samples linked to cluster and tumour type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
 * Output of Step 7: Samples annotated with metadata ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
@@ -130,8 +130,8 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
 <strong>DATA:</strong> <br>
-Table with the samples and the clusters they are assigned to each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
-Folder with for each cluster resolution the corresponding HCPC object containing the association of the features to the clusters at the specific level. ([Folder](SequenceContext/Data/HCPC_clustertree))
+Table with the samples and the clusters they are assigned to at each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
+HCPC objects containing the association of the features to the clusters at a specific cluster resolution. ([Folder](Clustering/Data/HCPC_clustertree))
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
@@ -206,8 +206,10 @@ Folder with for each cluster resolution the corresponding HCPC object containing
 <br>
 <h4>S2 Text. Recurrence versus general mutational characteristics.</h4>
 
-<strong>DATA:</strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
-   
+<strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
+
+<strong>CODE:</strong> Estimate for frequency of homopolymers in the genome ([RScript](Recurrence/Code/S2_Text_Table_STX2_6.R)) <br>
+<BR>   
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
@@ -222,4 +224,4 @@ Folder with for each cluster resolution the corresponding HCPC object containing
 
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
 
-<strong>DATA: </strong>Samples linked to cluster and tumor type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
+<strong>DATA: </strong>Samples linked to cluster and tumour type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
