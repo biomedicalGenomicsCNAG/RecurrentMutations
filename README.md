@@ -214,6 +214,11 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
+<strong>CODE:</strong> <BR>
+* Density plots of the replication time scores ([RScript](Recurrence/Code/S3_Text_Figs_STX3_2_3.R))
+* Plot the number of recurrent mutations along the genome for Lymph-BNHL and Lymph-CLL in cluster M. ([RScript](Recurrence/Code/S3_Text_Fig_STX3_17.R)) <br>
+
+<BR>
 <h4>S4 Text. Smoking history and related mutational subtypes.</h4>
 
 ---
@@ -221,7 +226,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 <h4>S1 File. Characteristic plots summarising each of the 42 features.</h4>
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
-
+<BR>
 <h4>S2 File. Sample distribution per tumour type across the 16 clusters.</h4>
 
 <strong>DATA: </strong>Samples linked to cluster and tumour type ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt))<br>
