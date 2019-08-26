@@ -63,6 +63,9 @@
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
+<p align="center">
+  <img src="Figures/Fig4.png" width="350" title="">
+</p>
 <strong>DATA:</strong><br>
 
 PCA object ([RData](Clustering/Data/res_pca.RData))
@@ -74,7 +77,10 @@ All significant associations between features and clusters ([RData](Clustering/D
 Correct the p-values for the results of the v tests (features versus clusters) for multiple testing and plot associations ([RScript](Clustering/Code/Fig4_feature_association_2_clusters.R)) <BR> <BR> 
   
 <h4>Fig 5. Enriched sequence motifs</h4> 
-   
+<p align="center">
+  <img src="Figures/Fig5.png" width="350" title="">
+</p>  
+
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
@@ -140,6 +146,9 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 <h2>Supporting Information</h2>
 
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
+<p align="center">
+  <img src="Figures/S1Fig.png" width="350" title="">
+</p>
 
 <strong>DATA:</strong> <br>
 Table with the samples and the clusters they are assigned to at each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
@@ -147,6 +156,9 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
+<p align="center">
+  <img src="Figures/S2Fig.png" width="350" title="">
+</p>
 
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
@@ -169,6 +181,9 @@ HCPC objects containing the association of the features to the clusters at a spe
 <br>
 
 <h4>S3 Figure. Enriched sequence motifs for T>G SSMs in cluster H.</h4>
+<p align="center">
+  <img src="Figures/S13Fig.png" width="350" title="">
+</p>
 
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
