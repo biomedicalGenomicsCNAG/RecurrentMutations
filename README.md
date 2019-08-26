@@ -14,7 +14,7 @@
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
 
-<strong>DATA:</strong> The 42 features used to compute the correlation ([RData](Clustering/Data/sample2features4corr.RData) | [TXT file](Clustering/Data/sample2features4corr.txt))<br>
+<p><strong>DATA:</strong>The 42 features used to compute the correlation ([RData](Clustering/Data/sample2features4corr.RData) | [TXT file](Clustering/Data/sample2features4corr.txt))<\p>
 
 <br>
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
