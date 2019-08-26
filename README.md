@@ -18,6 +18,10 @@
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
 
+<p align="right">
+  <img src="Figures/Fig2.png" width="350" title="">
+</p>
+
 <strong>DATA:</strong> The statistics used to compute the correlations in the manuscript, including those in S2 Text. ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
 <strong>CODE:</strong> Correct p-values for multiple testing and plot correlations for the 42 features ([RScript](Clustering/Code/Fig2_correlationFeatures.R)) <BR> 
