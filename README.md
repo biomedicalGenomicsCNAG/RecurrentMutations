@@ -47,7 +47,16 @@
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
 <br>
+<strong>DATA:</strong><br>
 
+PCA object ([RData](Clustering/Data/res_pca.RData))
+<br>
+All significant associations between features and clusters ([RData](Clustering/Data/descr_var_hcpc.RData))
+<br>
+<br>
+<strong>CODE:</strong><br>
+Correct the p-values for the results of the v tests (features versus clusters) for multiple testing and plot associations ([RScript](Clustering/Code/Fig4_feature_association_2_clusters.R)) <BR> <BR> 
+  
 <h4>Fig 5. Enriched sequence motifs</h4> 
    
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
