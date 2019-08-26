@@ -129,8 +129,8 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
-<strong>DATA:</strong> [Clustering Tree (TXT table)](Clustering/Data/HierarchClust20_sample2clust.txt) <br>
-*Table providing the distribution of samples at different cluster resolutions (from 2 to 20 clusters)*
+<strong>DATA:</strong> <br>
+Table with the samples and the clusters they are assigned to each cluster resolution (from 2 to 20 clusters) [TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
@@ -148,7 +148,10 @@ Correct the p-values for the results of the v tests (features versus clusters) f
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_M_rec_C_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_M_unique_C_G_21positions.txt))<br>
 
-<strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R)<br>
+<strong>CODE:</strong> <BR>
+* Add sequence context to SSMs and collect mutation of a specific subtype of a specific group of sample ([RScript](SequenceContext/Code/PrepareInput4SequenceLogos.R)) <br>
+* Compute and plot sequence logos ([RScript](SequenceContext/Code/SequenceLogos.R)) <br>
+* Compute statistics for sequence motifs ([RScript](SequenceContext/Code/SequenceMotifsStats.R)) <br>
 
 <br>
 
@@ -167,7 +170,10 @@ Correct the p-values for the results of the v tests (features versus clusters) f
     * Recurrent mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_H_rec_T_G_21positions.txt))<br>
     * Unique mutations ([TXT file](SequenceContext/Data/Entropies/SeqContext_RelativeEntropies_and_total_cluster_H_unique_T_G_21positions.txt))<br>
 
-<strong>CODE:</strong> [SequenceLogos_script](SequenceContext/Code/SequenceLogos_script.R) <br>
+<strong>CODE:</strong> <BR>
+* Add sequence context to SSMs and collect mutation of a specific subtype of a specific group of sample ([RScript](SequenceContext/Code/PrepareInput4SequenceLogos.R)) <br>
+* Compute and plot sequence logos ([RScript](SequenceContext/Code/SequenceLogos.R)) <br>
+* Compute statistics for sequence motifs ([RScript](SequenceContext/Code/SequenceMotifsStats.R)) <br>
 
 ---
 
