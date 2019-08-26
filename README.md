@@ -131,7 +131,7 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 
 <strong>DATA:</strong> <br>
 Table with the samples and the clusters they are assigned to each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
-Folder with for each cluster resolution the corresponding HCPC object containing the association of the features to the clusters at the specific level. ([Folder](SequenceContext/Data/HCPC_clustertree))
+One HCPC object per cluster resolution containing the association of the features to the clusters at the specific level. ([Folder](Clustering/Data/HCPC_clustertree))
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
