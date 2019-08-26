@@ -18,7 +18,7 @@
 <br>
 <h4>Fig 2. Spearman’s rank correlation between the 42 mutational features</h4>
 
-<p align="right">
+<p align="center">
   <img src="Figures/Fig2.png" width="350" title="">
 </p>
 
@@ -51,9 +51,9 @@
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
 
 <p align="center">
-  <img src="Data/Table1_key_charact_clusters.png" width="350" title="">
-  <img src="Data/Table1_key_charact_clusters.png" width="350" alt="accessibility text">
+  <img src="Figures/Table1_key_charact_clusters.png" width="350" title="">
 </p>
+
 <strong>DATA:</strong><br>
 
 * Piediagram ([RData](Clustering/Data/sample2ttype2cluster.RData) | [TXT file](Clustering/Data/sample2ttype2cluster.txt)) <br>
@@ -131,6 +131,10 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 
 <br>
 <h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
+
+<p align="center">
+  <img src="Figures/Fig6.png" width="350" title="">
+</p>
 
 <br>
 <h2>Supporting Information</h2>
