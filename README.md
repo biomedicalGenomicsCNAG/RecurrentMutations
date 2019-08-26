@@ -208,9 +208,8 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
 
-<strong>CODE:</strong><br>
-Estimate for frequency of homopolymers in the genome ([RScript](Recurrence/Code/S2_Text_Table_STX2_6.R)) <br>
-   
+<strong>CODE:</strong> Estimate for frequency of homopolymers in the genome ([RScript](Recurrence/Code/S2_Text_Table_STX2_6.R)) <br>
+<BR>   
 <h4>S3 Text. Detailed cluster-specific descriptions.</h4>
 
 <strong>DATA: </strong>Features in absolute terms and percentages ([RData](Clustering/Data/sample2featuresAbsAndPerc.RData) | [TXT file](Clustering/Data/sample2featuresAbsAndPerc.txt))<br>
