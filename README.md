@@ -130,8 +130,8 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 <h4>S1 Figure. Clustering tree showing tumour type distribution for 2 to 20 clusters.</h4>
 
 <strong>DATA:</strong> <br>
-Table with the samples and the clusters they are assigned to each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
-One HCPC object per cluster resolution containing the association of the features to the clusters at the specific level. ([Folder](Clustering/Data/HCPC_clustertree))
+Table with the samples and the clusters they are assigned to at each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
+HCPC objects containing the association of the features to the clusters at a specific cluster resolution. ([Folder](Clustering/Data/HCPC_clustertree))
 
 <br>
 <h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
