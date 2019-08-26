@@ -31,6 +31,10 @@
 * Output of Step 7: Samples annotated with metadata ([RData](Clustering/Data/step7_sample2annotation.RData) | [TXT file](Clustering/Data/step7_sample2annotation.txt))<br>
 
 <strong>CODE:</strong><br>
+* Main workflow, step 1 through 7 ([RScript](Clustering/Code/main_workflow.R)) <BR>
+   * Annotation of mutations ([RScript](Clustering/Code/main_mutationLevelAnn.R)) <BR>
+   * Annotation of samples ([RScript](Clustering/Code/main_sampleLevelAnn.R)) <BR>
+* Generic functions ([RScript](Clustering/Code/main_utils.R)) <BR> 
 
 <br>
 <h4>Table 1: Key characteristics of the 16 clusters</h4>
