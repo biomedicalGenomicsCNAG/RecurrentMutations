@@ -62,7 +62,6 @@
 
 <br>
 <h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
-<br>
 <p align="center">
   <img src="Figures/Fig4.png" width="350" title="">
 </p>
@@ -158,6 +157,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 <p align="center">
   <img src="Figures/S2Fig.png" width="350" title="">
 </p>
+
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
@@ -182,6 +182,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 <p align="center">
   <img src="Figures/S3Fig.png" width="350" title="">
 </p>
+
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
 
 <strong>DATA:</strong>
