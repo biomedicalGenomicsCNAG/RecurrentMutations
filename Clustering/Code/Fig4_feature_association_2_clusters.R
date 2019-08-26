@@ -1,6 +1,13 @@
+library(FactoMineR)
+library(ggplot2)
+library(reshape2)
 
+#' Correct the p-values for the results of the v tests (features versus clusters) for multiple testing.
+#' @param res_pca: PCA object
+#' @return descr_var_hcpc: all statisticially significant association (p < 0.05) after multiple testing correction.
 correctPvalAssociations4MultTest <- function(res_pca){
 
+    set.seed(10)
     res_hcpc_th_prob1 <- HCPC(res_pca, nb.clust=16,max=20,graph = FALSE,consol=TRUE, proba=1)
     
     all_pval <- as.data.frame(matrix(nrow=672, ncol=2))
@@ -23,17 +30,18 @@ correctPvalAssociations4MultTest <- function(res_pca){
       descr_var_hcpc[[i]][,"p.value"] <- all_pval[which(all_pval$clust_num == i), "pval_adj"]
       descr_var_hcpc[[i]] <- descr_var_hcpc[[i]][which(descr_var_hcpc[[i]][,"p.value"] < 0.05),]
     }
+    
+    return(descr_var_hcpc)
 }
 
-#poly_columns <- grep("Poly", colnames(stats), value=TRUE)
-#poly_columns <- grep("perc_", poly_columns, value=TRUE)
-
-#feature_names <- c("num_ssms","num_sims", "perc_of_mut_sims", "perc_CA", "perc_CG", "perc_CT", "perc_TA", "perc_TC", "perc_TG", "perc_1bp_del_A_T", "perc_1bp_del_C_G", "perc_1bp_ins_A_T", "perc_1bp_ins_C_G", poly_columns, "perc_rec_ssms", "perc_rec_sims", "perc_of_rec_mut_sim", "perc_rec_CA", "perc_rec_CG", "perc_rec_CT", "perc_rec_TA", "perc_rec_TC", "perc_rec_TG", "perc_rec_1bp_del_A_T", "perc_rec_1bp_del_C_G", "perc_rec_1bp_ins_A_T", "perc_rec_1bp_ins_C_G")
-
-plotCharacteristicsClustersManuscript <- function(descr_var_hcpc, feature_names, resultsDir)
+#' Plot the association between the features and the clusters
+#' @param descr_var_hcpc: all statisticially significant association (p < 0.05) after multiple testing correction.
+#' @param feature_names: names of the features
+#' @param resultsDir: directory to store the resulting plot  
+plotAssociationOfFeatures2Clusters <- function(descr_var_hcpc, feature_names, resultsDir)
 {
   clusters <-  c("C","A","B","D","G","E","F","I","K","O","L","M","H","N","P","J")
-  #num_clusters <- length(res.hcpc$desc.var$quanti)
+
   num_clusters <- length(descr_var_hcpc)
   
   features2vtestVal <- as.data.frame(matrix(data=0,nrow=length(feature_names), ncol=num_clusters))
