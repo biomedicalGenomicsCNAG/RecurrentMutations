@@ -9,8 +9,14 @@
 library(Biostrings)
 library(ggplot2)
 library(ggseqlogo)
-prior_genome <- c(0.2952696, 0.2044550, 0.2045758, 0.2956996)
-names(prior_genome) <- c("A","C","G","T")
+
+# Prior genome 
+fastafileGenome # need to load genome in fasta format
+genome_dnastringset <- readDNAStringSet(fastafileGenome)
+genome_dnastringset <- genome_dnastringset[names(genome_dnastringset) %in% c(1:22, "X", "Y")]
+all_motifs_counts <- oligonucleotideFrequency(genome_dnastringset, width=1, step=1)
+num_base <- colSums(all_motifs_counts)
+prior_genome <- num_base/sum(num_base)  #("A": 0.2952696, "C": 0.2044550, "G": 0.2045758, "T": 0.2956996)
 
 # FUNCTION: "plotLogo21"
 
