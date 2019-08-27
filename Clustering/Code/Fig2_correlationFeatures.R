@@ -247,7 +247,10 @@ getAllCorrelations <- function(sample2featuresAbsAndPerc, correlation_type, mult
   return(all_correlations)
 } 
 
-
+#' Plot the correlation between the 42 features
+#' @param all_correlations: all correlations computed for the manuscript with p-values adjusted for multiple testing
+#' @param features_names: name of the 42 features
+#' @param resultsDir: directory to store the plot
 plotCorrelationBetweenFeatures <- function(all_correlations, features_names, resultsDir)
 {
   
