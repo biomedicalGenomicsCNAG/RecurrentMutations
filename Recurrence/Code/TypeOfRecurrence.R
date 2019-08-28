@@ -4,14 +4,20 @@ source("main_utils.R")
 
 #' Add to each recurrent mutation in how many samples of each tumour type it is present 
 #'
-#' @param rec_mutations: data.frame with the recurrent mutations
+#' @param rec_mutations: data.frame with the recurrent mutations (summary file generated based on the outcome provided by BCFTools)
 #' @param mutation_type: ssm or sim
 #' @param sample2ttype: data.frame linking the sample id to the tumor type
 #' @param sample_info_file: file with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
 #'
 #' @return data.frame with the recurrent mutations linked to the number of samples they are found in for each tumour type
-addTtype2RecMut <- function(rec_mutations, mutation_type, sample2ttype, sample_info_file)
+addTtype2RecMut <- function(rec_mutations_file, mutation_type, sample2ttype, sample_info_file)
 {
+  rec_mutations <- read.table(rec_mutations_file, header = TRUE, comment.char = "", as.is = TRUE)
+  colnames(rec_mutations)[1] <- "CHROM"
+  
+  rec_mutations$num_samples <- as.numeric(sub("rec_count=", "", rec_mutations$Count))
+  rec_mutations$mut_barcode <- paste(rec_mutations$CHROM, rec_mutations$POS, rec_mutations$REF, rec_mutations$ALT, sep="_")
+  
   sample_info <- read.table(file = sample_info_file, header=TRUE, sep = "\t", stringsAsFactors = FALSE)
   tumor_types <- sort(unique(as.character(sample2ttype$tumor_type)))
   
