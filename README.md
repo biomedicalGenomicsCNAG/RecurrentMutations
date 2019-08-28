@@ -207,6 +207,8 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <h4>S2 Table. Recurrence in pan-cancer context and within tumour type(s).</h4>
 
+<strong>CODE:</strong><BR> Determine the type of recurrence for each recurrent mutation ('pan-cancer', 'single tumour type', 'multiple tumour types') ([RScript](Recurrence/Code/TypeOfRecurrence.R)) <br>
+  
 ---
 
 <h4>S1 Text. Estimation of the levels of recurrence when purely driven by chance.</h4>
