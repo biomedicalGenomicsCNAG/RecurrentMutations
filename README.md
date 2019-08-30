@@ -5,7 +5,7 @@
 
 <br>
 
-<h2>Main Figures</h2>
+<h2>Main Figures and Table</h2>
 
 <h4>Fig 1. Recurrence within each tumour type in absolute numbers and percentages</h4>
 
