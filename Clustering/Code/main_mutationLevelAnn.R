@@ -7,15 +7,16 @@ library(plyr)
 
 #' Combine multiple bigWig files with the replication time data into a single file.
 #' Data is downloaded from http://genome.ucsc.edu/cgi-bin/hgFileUi?db=hg19&g=wgEncodeUwRepliSeq - wavelet smoothed signal
-#' @param file_names_replication_time: list of filenames with replication time data (one file per cell line) 
-#' @param dataDir: directory where the replication time data is stored
-readInBigWigFile <- function(file_names_replication_time, dataDir)
+#' @param filenames_replication_time: list of filenames with replication time data (one file per cell line) 
+#' @param metadataDir: directory where the replication time data is stored
+#' @return replication time scores from multiple bigWig files combined
+readInBigWigFile <- function(filenames_replication_time, metadataDir)
 {
   
   for(i in 1:length(file_names_replication_time))
   {
     print(i)
-    cur_bigwig_file <- import(paste(dataDir,file_names_replication_time[i],sep=""))   
+    cur_bigwig_file <- import(paste(metadataDir,"/", filenames_replication_time[i],sep=""))   
     colnames(elementMetadata(cur_bigwig_file))[1] <- paste("score_org_", sub(".bigWig", "",(sub("WaveSignalRep", "_", sub("wgEncodeUwRepliSeq", "",filenames_bigwig[i])))),sep="")
     
     if(i==1)
@@ -34,7 +35,7 @@ readInBigWigFile <- function(file_names_replication_time, dataDir)
 #' Collapse the GENCODE annotation into a single entry
 #' @param mutation_df: data.frame with mutations
 #' @param num_cores: number of cores for mclapply
-#' @return mutations2gencode_formatted: data.frame with mutations annotated with GENCODE
+#' @return data.frame with mutations annotated with GENCODE
 collapseGenCodeAnnotation <- function(mutations_df, num_cores)
 {
   mut_barcodes <- unique(mutations_df$mut_barcode)
@@ -75,7 +76,7 @@ collapseGenCodeAnnotation <- function(mutations_df, num_cores)
 #' @param mutations_granges: GRange object with the mutations
 #' @param annotation_v19: GENCODE information (https://www.gencodegenes.org/human/releases.html)
 #' @param num_cores: number of cores to use in mclapply
-#' @return mutations2gencode: data.frame with mutations annotated with GENCODE
+#' @return data.frame with mutations annotated with GENCODE
 addGencodeAnnotation <- function(mutations_df, mutations_granges, annotation_v19, num_cores)
 {
 
@@ -132,11 +133,11 @@ addGencodeAnnotation <- function(mutations_df, mutations_granges, annotation_v19
   return(mutations2gencode)
 }
 
-#' Replication time is provided for windows of a 1000 bp and some SIMs overlap more than one.
+#' Replication time is provided for windows of a 1000 bp and some SIMs overlap more than one window.
 #' If so, take the average.
 #' @param mutations2replTimeScores: data.frame with SIMs annotated with replication time scores
 #' @param num_cores: number of cores to use in mclapply
-#' @return mutations2replTimeScores_formatted: data.frame with mutations annotated with replication time scores
+#' @return data.frame with mutations annotated with replication time scores
 collapseReplTimeScores <- function(mutations_replTimeScores, num_cores)
 {
   mut_barcodes <- unique(mutations_replTimeScores$mut_barcode)
@@ -165,7 +166,7 @@ collapseReplTimeScores <- function(mutations_replTimeScores, num_cores)
 #' @param mutation_type: SSM or SIM
 #' @param replicationTimeScores: replication time data
 #' @param num_cores: number of cores to use in mclapply
-#' @return mutation2replTimeScore: data.frame with mutations annotated with replication time scores
+#' @return data.frame with mutations annotated with replication time scores
 addReplTimeScoresAnnotation <- function(mutations_df, mutations_granges, mutation_type, replicationTimeScores, num_cores)
 {
     all_matches <- findOverlaps(query = mutations_granges, subject = replicationTimeScores)
@@ -194,32 +195,32 @@ addReplTimeScoresAnnotation <- function(mutations_df, mutations_granges, mutatio
 }
 
 #' Annotate the mutations with the functional category retrieved from GENCODE and the replication time scores retrieved from ENCODE/University of Washington. #
-#' @param sample_info_file: file with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
+#' @param sample_info: data.frame with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
 #' @param vcfIsFiltered: boolean to indicate whether or not the VCF file has been filtered based on the FILTER column
-#' @param mutation_type: SSM or SIM
+#' @param mutation_type: ssm or sim
 #' @param annotation_v19: GENCODE information (https://www.gencodegenes.org/human/releases.html)
 #' @param replicationTimeScores: replication time data
-#' @param resultsDir: directory (including folder) to store the tab-del files with the annotated mutations 
+#' @param annSamplesDir: directory to store the tab-del sample files with the annotated mutations 
+#' @param annSamplesFolder: folder to store the tab-del sample files with the annotated mutations 
 #' @param num_cores: number of cores to use in mclapply
-annotateAtMutationLevel <- function(sample_info_file, vcfIsFiltered, mutation_type, annotation_v19, replicationTimeScores, resultsDir, num_cores)
+annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder, num_cores)
 {
- 
-  isFinished <- mclapply(1:nrow(sample_info_file), function(x)
+  isFinished <- mclapply(1:nrow(sample_info), function(x)
   {
     print(x)
     
     # read in VCF file with mutations
     if(mutation_type == "ssm")
-      mutations_df <- vcf2df(sample_info_file[x,"loc_all_ssm_vcf"],vcfIsFiltered)
+      mutations_df <- vcf2df(sample_info[x,"loc_all_ssm_vcf"],vcfIsFiltered)
     else 
-      mutations_df <- vcf2df(sample_info_file[x,"loc_all_sim_vcf"],vcfIsFiltered)
+      mutations_df <- vcf2df(sample_info[x,"loc_all_sim_vcf"],vcfIsFiltered)
     
     mutations_df$mut_barcode <-  paste(mutations_df$CHROM, mutations_df$POS, mutations_df$REF, mutations_df$ALT, sep="_")
     
     #convert to GRange format
     mutations_granges <- convert2GRanges(mutations_df, mutation_type)
     
-    sample_id <- sample_info_file[x,"sample_id"]
+    sample_id <- sample_info[x,"sample_id"]
     
     # Add functional category from GenCode
     mutations_df_genCode <- addGencodeAnnotation(mutations_df, mutations_granges, annotation_v19, num_cores)
@@ -230,7 +231,7 @@ annotateAtMutationLevel <- function(sample_info_file, vcfIsFiltered, mutation_ty
     rm(mutations_df_genCode)
     gc()
     
-    write.table(mutations_df_genCode_replTime, file=paste(resultsDir, "/", sample_id, "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = FALSE, sep="\t",row.names = FALSE, col.names = TRUE)
+    write.table(mutations_df_genCode_replTime, file=paste(annSamplesDir, "/", annSamplesFolder, "/", sample_id, "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = FALSE, sep="\t",row.names = FALSE, col.names = TRUE)
     
     
     rm(mutations_df_genCode_replTime)

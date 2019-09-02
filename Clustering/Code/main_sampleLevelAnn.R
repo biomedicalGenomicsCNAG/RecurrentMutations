@@ -3,19 +3,70 @@ library(parallel)
 
 source("main_utils.R")
 
+#' Get the genes with a SSM/SIM ('mut_type') affecting the coding sequence
+#' @param mut_with_effect: mutations that change coding sequence
+#' @param mut_type: SSM or SIM
+#' @param annotation_v19: GENCODE annotation for GRCh37/h19
+#' @return genes_affected: list of genes with mutation from the 'mut_with_effect' list.
+getAffectedGenes <- function(mut_with_effect, mut_type, annotation_v19)
+{
+  # get matches of the list of mutation with the GENODE annotation
+  mutations_granges <- convert2GRanges(mut_with_effect, mut_type)
+  
+  matches_annotation <- findOverlaps(query = mutations_granges, subject = annotation_v19)
+  
+  mutations_withMatch <- as.data.frame(mut_with_effect[queryHits(matches_annotation),])
+  annotation_matches <- as.data.frame(annotation[subjectHits(matches_annotation),])
+  
+  mutations_annotated <- unique(cbind(mutations_withMatch, annotation_matches[,c("gene_name", "type")]))
+  
+  mutation_notMatched <- as.data.frame(mut_with_effect[-queryHits(matches_annotation),])
+  
+  # if a mutation hits a CDS,then  get the corresponding gene
+  genesCDS2mut_barcode <- unique(mutations_annotated[which(mutations_annotated$CDS == TRUE & mutations_annotated$type == "CDS"), c("mut_barcode", "gene_name")])
+  
+  # get the mutations that do not hit a CDS according to GENCODE
+  mut_not_matched_CDS <- mutations_annotated[which(!(mutations_annotated$mut_barcode %in% genesCDS2mut_barcode$mut_barcode)),]
+  
+  # if a mutation that does not hit a CDS, but does hit an exon, then get the corresponding gene
+  genesExon2mut_barcode <- unique(mut_not_matched_CDS[which(mut_not_matched_CDS$exon == TRUE & mut_not_matched_CDS$type == "exon"), c("mut_barcode", "gene_name")])
+  
+  # get the mutations that do not hit a CDS nor an exon according to GENCODE
+  mut_not_matched_CDS_exon <- mut_not_matched_CDS[which(!(mut_not_matched_CDS$mut_barcode %in% genesExon2mut_barcode$mut_barcode)),]
+  
+  # if a mutation that does not hit a CDS nor exon, but does hit a transcript, then get the corresponding gene
+  genesTranscript2mut_barcode <- unique(mut_not_matched_CDS_exon[which(mut_not_matched_CDS_exon$transcript == TRUE & mut_not_matched_CDS_exon$type == "transcript"), c("mut_barcode", "gene_name")])
+  
+  # get the mutations that do not hit a CDS nor an exon nor a transcript according to GENCODE
+  mut_not_matched_CDS_exon_tx <- mut_not_matched_CDS_exon[which(!(mut_not_matched_CDS_exon$mut_barcode %in% genesTranscript2mut_barcode$mut_barcode)),]
+  
+  # if a mutation that does not hit a CDS nor exon nor transcript, but does hit a gene, then get the corresponding gene
+  genesGene2mut_barcode <- unique(mut_not_matched_CDS_exon_tx[which(mut_not_matched_CDS_exon_tx$gene == TRUE & mut_not_matched_CDS_exon_tx$type == "gene"), c("mut_barcode", "gene_name")])
+  
+  if(nrow(mutation_notMatched) > 0)
+  {
+    print("mutations not matching in GENCODE --> intergenic")
+    print(mutation_notMatched)
+  }
+  
+  # combine list of genes hit and return unique list
+  genes_affected <- unique(c(genesCDS2mut_barcode$gene_name, genesExon2mut_barcode$gene_name,genesTranscript2mut_barcode$gene_name,genesGene2mut_barcode$gene_name))
+  
+  return(genes_affected)
+}
+
 #' Summarize the annotation to sample level: impact classification, functional category and replication time scores
 #' @param sample2annotation
 #' @param mut_type: SSM or SIM
 #' @param annotation_v19: GENCODE 
 #' @param replicationTimeScores_df: replication time scores
-#' @param dataDir: directory of the samples
-#' @param samplesFolder: folder of the samples
+#' @param annSamplesDir: directory of the annotated samples at mutation level
+#' @param annSamplesFolder: folder of the annotated samples at mutation level
 #' @param num_cores: number of cores to use for mclapply
-summarizeMut2SampleLevelAnn <- function(sample2annotation, mut_type, annotation_v19, replicationTimeScores_df, dataDir, samplesFolder, num_cores)
+summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, annotation_v19, replicationTimeScores_df, annSamplesDir, annSamplesFolder, num_cores)
 {
-  samples_annotatedMutations <- list.files(paste(dataDir, "/", samplesFolder, "/",sep=""), pattern = "_annotatedWithGenCode_ReplTime.txt")
-  
-  
+  samples_annotatedMutations <- list.files(paste(annSamplesDir, "/", annSamplesFolder, "/",sep=""), pattern = "_annotatedWithGenCode_ReplTime.txt")
+
   # cut offs to be used to separate early from late replication regions.
   replicationTimeScores_df$score_org_cancer_clines_median <- rowMedians(as.matrix(replicationTimeScores_df[, c("score_org_Helas3_1", "score_org_Mcf7_1", "score_org_Sknsh_1", "score_org_Hepg2_1", "score_org_K562_1")]))
   median_replTime_median_cancer_clines <- median(replicationTimeScores_df$score_org_cancer_clines_median)
@@ -47,7 +98,7 @@ summarizeMut2SampleLevelAnn <- function(sample2annotation, mut_type, annotation_
     
     if(paste(sample2annotation[x, "sample_id"], "_annotatedWithGenCode_ReplTime.txt", sep="") %in% samples_annotatedMutations)
     {
-      cur_sample_mutLevelAnn <- read.table(file=paste(dataDir, "/", samplesFolder, "/",stats[x, "sample_id"], "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = "",sep="\t",header = TRUE, stringsAsFactors = FALSE)
+      cur_sample_mutLevelAnn <- read.table(file=paste(annSamplesDir, "/", annSamplesFolder, "/",sample2annotation[x, "sample_id"], "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = "",sep="\t",header = TRUE, stringsAsFactors = FALSE)
       num_mutations <- nrow(cur_sample_mutLevelAnn)
       
       if(num_mutations > 0) 
@@ -122,115 +173,64 @@ summarizeMut2SampleLevelAnn <- function(sample2annotation, mut_type, annotation_
  return(sample2annotation)        
 }
 
-#' Get the genes with a SSM/SIM ('mut_type') affecting the coding sequence
-#' @param mut_with_effect: mutations that change coding sequence
-#' @param mut_type: SSM or SIM
-#' @param annotation_v19: GENCODE annotation for GRCh37/h19
-#' @return genes_affected: list of genes with mutation from the 'mut_with_effect' list.
-getAffectedGenes <- function(mut_with_effect, mut_type, annotation_v19)
-{
-  # get matches of the list of mutation with the GENODE annotation
-  mutations_granges <- convert2GRanges(mut_with_effect, mut_type)
-  
-  matches_annotation <- findOverlaps(query = mutations_granges, subject = annotation_v19)
-  
-  mutations_withMatch <- as.data.frame(mut_with_effect[queryHits(matches_annotation),])
-  annotation_matches <- as.data.frame(annotation[subjectHits(matches_annotation),])
-  
-  mutations_annotated <- unique(cbind(mutations_withMatch, annotation_matches[,c("gene_name", "type")]))
-  
-  mutation_notMatched <- as.data.frame(mut_with_effect[-queryHits(matches_annotation),])
- 
-  # if a mutation hits a CDS,then  get the corresponding gene
-  genesCDS2mut_barcode <- unique(mutations_annotated[which(mutations_annotated$CDS == TRUE & mutations_annotated$type == "CDS"), c("mut_barcode", "gene_name")])
-  
-  # get the mutations that do not hit a CDS according to GENCODE
-  mut_not_matched_CDS <- mutations_annotated[which(!(mutations_annotated$mut_barcode %in% genesCDS2mut_barcode$mut_barcode)),]
-  
-  # if a mutation that does not hit a CDS, but does hit an exon, then get the corresponding gene
-  genesExon2mut_barcode <- unique(mut_not_matched_CDS[which(mut_not_matched_CDS$exon == TRUE & mut_not_matched_CDS$type == "exon"), c("mut_barcode", "gene_name")])
-  
-  # get the mutations that do not hit a CDS nor an exon according to GENCODE
-  mut_not_matched_CDS_exon <- mut_not_matched_CDS[which(!(mut_not_matched_CDS$mut_barcode %in% genesExon2mut_barcode$mut_barcode)),]
-  
-  # if a mutation that does not hit a CDS nor exon, but does hit a transcript, then get the corresponding gene
-  genesTranscript2mut_barcode <- unique(mut_not_matched_CDS_exon[which(mut_not_matched_CDS_exon$transcript == TRUE & mut_not_matched_CDS_exon$type == "transcript"), c("mut_barcode", "gene_name")])
-  
-  # get the mutations that do not hit a CDS nor an exon nor a transcript according to GENCODE
-  mut_not_matched_CDS_exon_tx <- mut_not_matched_CDS_exon[which(!(mut_not_matched_CDS_exon$mut_barcode %in% genesTranscript2mut_barcode$mut_barcode)),]
-  
-  # if a mutation that does not hit a CDS nor exon nor transcript, but does hit a gene, then get the corresponding gene
-  genesGene2mut_barcode <- unique(mut_not_matched_CDS_exon_tx[which(mut_not_matched_CDS_exon_tx$gene == TRUE & mut_not_matched_CDS_exon_tx$type == "gene"), c("mut_barcode", "gene_name")])
-  
-  if(nrow(mutation_notMatched) > 0)
-  {
-    print("mutations not matching in GENCODE --> intergenic")
-    print(mutation_notMatched)
-  }
-  
-  # combine list of genes hit and return unique list
-  genes_affected <- unique(c(genesCDS2mut_barcode$gene_name, genesExon2mut_barcode$gene_name,genesTranscript2mut_barcode$gene_name,genesGene2mut_barcode$gene_name))
-  
-  return(genes_affected)
-}
-
 #' Combine the smoking status information of PCAWG with the one from TCGA (https://portal.gdc.cancer.gov/legacy-archive/search/f)
-#' @param loc_file_pcawg_tobacco_status: location of the file with the PCAWG information on smoking status
-#' @param dataDir: directory of the TCGA annotation. To link to PCAWG: tcga_donor_uuid <--> bcr_patient_uuid  
-getSmokingStatus <- function(loc_file_pcawg_tobacco_status, dataDir) 
+#' @param filename_pcawg_tobacco_status: location of the file with the PCAWG information on smoking status
+#' @param metadataDir: directory of the PCAWG and TCGA annotation. To link to PCAWG: tcga_donor_uuid <--> bcr_patient_uuid  
+#' @return data.frame with the smoking status of PCAWG and TCGA combined
+getSmokingStatus <- function(filename_pcawg_tobacco_status, metadataDir) 
 {
   ##############################################
   # Read in TCGA information on smoking status #
   ##############################################
-  blca_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_blca.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  blca_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_blca.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(blca_tcga_clinical) <- blca_tcga_clinical[2,]
   blca_tcga_clinical <- blca_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   blca_tcga_clinical$year_of_tobacco_smoking_onset <- NA
   blca_tcga_clinical <- blca_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  cesc_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_cesc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  cesc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_cesc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(cesc_tcga_clinical) <- cesc_tcga_clinical[2,]
   cesc_tcga_clinical <- cesc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   cesc_tcga_clinical$year_of_tobacco_smoking_onset <- NA
   cesc_tcga_clinical <- cesc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  dlbc_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_dlbc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  dlbc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_dlbc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(dlbc_tcga_clinical) <- dlbc_tcga_clinical[2,]
   dlbc_tcga_clinical <- dlbc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   dlbc_tcga_clinical$year_of_tobacco_smoking_onset <- NA
   dlbc_tcga_clinical <- dlbc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  hnsc_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_hnsc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  hnsc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_hnsc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(hnsc_tcga_clinical) <- hnsc_tcga_clinical[2,]
   hnsc_tcga_clinical <- hnsc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   hnsc_tcga_clinical$age_began_smoking_in_years <- NA
   hnsc_tcga_clinical$age_began_smoking_in_years <- NA
   hnsc_tcga_clinical <- hnsc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  kich_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_kich.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  kich_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_kich.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(kich_tcga_clinical) <- kich_tcga_clinical[2,]
   kich_tcga_clinical <- kich_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   kich_tcga_clinical$age_began_smoking_in_years <- NA
   kich_tcga_clinical <- kich_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  kirc_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_kirc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  kirc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_kirc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(kirc_tcga_clinical) <- kirc_tcga_clinical[2,]
   kirc_tcga_clinical <- kirc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   kirc_tcga_clinical$age_began_smoking_in_years <- NA
   kirc_tcga_clinical <- kirc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  kirp_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_kirp.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  kirp_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_kirp.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(kirp_tcga_clinical) <- kirp_tcga_clinical[2,]
   kirp_tcga_clinical <- kirp_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   kirp_tcga_clinical$age_began_smoking_in_years <- NA
   kirp_tcga_clinical <- kirp_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  luad_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_luad.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  luad_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_luad.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(luad_tcga_clinical) <- luad_tcga_clinical[2,]
   luad_tcga_clinical <- luad_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   luad_tcga_clinical <- luad_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  lusc_tcga_clinical <- read.table(file = paste(dataDir, "/nationwidechildrens.org_clinical_patient_lusc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  lusc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_lusc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(lusc_tcga_clinical) <- lusc_tcga_clinical[2,]
   lusc_tcga_clinical <- lusc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   lusc_tcga_clinical <- lusc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","microsatellite_instability", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
@@ -300,20 +300,22 @@ getSmokingStatus <- function(loc_file_pcawg_tobacco_status, dataDir)
 # Metadata: ID in PCAWG <--> ID in metadata file, location data
 #'  @param sample2ttype_cluster: sample linked to tumor type, cluster and identifiers needed to link to annotation
 #'  @param annotation_v19: GENCODE information (https://www.gencodegenes.org/human/releases.html)
-#'  @param replicationTimeScores: data.frame with replication time scores
-#'  @param loc_file_drivers: location of file with predicted driver mutations. To link to PCAWG: tumor_wgs_aliquot_id <--> sample_id, https://www.biorxiv.org/content/10.1101/190330v2
-#'  @param loc_file_IGHV_status: location of file with IGHV data. To link to PCAWG: submitted_donor_id <--> Case,  https://www.nature.com/articles/nature14666
-#'  @param loc_file_MSI_classification_1: MSI status according to MSI-Method 1. To link to PCAWG: tumor_wgs_submitter_sample_id <--> ID, https://docs.icgc.org/pcawg/data/
-#'  @param loc_file_MSI_classification_2: MSI status according to MSI-Method 2. To link to PCAWG:tumor_wgs_aliquot_id <--> tumor_wgs_aliquot_id, https://www.biorxiv.org/content/10.1101/208330v1
-#'  @param loc_file_SBS_signatures: SBS Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
-#'  @param loc_file_DBS_signatures: DBS Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
-#'  @param loc_file_ID_signatures: ID Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
-#'  @param loc_file_pcawg_smoking_status: smoking status from PCAWG, extend with TCGA annotation. Annotation PCAWG uses the icgc_donor_id, https://docs.icgc.org/pcawg/data/
-#'  @param dataDir: directory of the data
-#'  @param samplesFolder: folder of the annotated sample files on mutation level
+#'  @param replicationTimeScores_df: data.frame with replication time scores
+#'  @param metadataDir: directory in which the metadata is stored
+#'  @param filename_drivers: filename of the file with predicted driver mutations. To link to PCAWG: tumor_wgs_aliquot_id <--> sample_id, https://www.biorxiv.org/content/10.1101/190330v2
+#'  @param filename_IGHV_status: filename of the file with IGHV data. To link to PCAWG: submitted_donor_id <--> Case,  https://www.nature.com/articles/nature14666
+#'  @param filename_MSI_classification_1: filename of the file with the MSI status according to MSI-Method 1. To link to PCAWG: tumor_wgs_submitter_sample_id <--> ID, https://docs.icgc.org/pcawg/data/
+#'  @param filename_MSI_classification_2: filename of the file with the MSI status according to MSI-Method 2. To link to PCAWG:tumor_wgs_aliquot_id <--> tumor_wgs_aliquot_id, https://www.biorxiv.org/content/10.1101/208330v1
+#'  @param filename_SBS_signatures: filename of the file with the SBS signatures contribution. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
+#'  @param filename_DBS_signatures: filename of the file with the DBS signatures contribution. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
+#'  @param filename_ID_signatures: filename of the file with the ID signatures contribution. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
+#'  @param filename_pcawg_smoking_status: filename of the file with smoking status from PCAWG. Annotation PCAWG uses the icgc_donor_id, https://docs.icgc.org/pcawg/data/
+#'  @param annSamplesDir: directory in which the annotated sample files on mutation levels are stored
+#'  @param annSamplesFolder_ssms: folder of the annotated sample files on mutation level for SSMs
+#'  @param annSamplesFolder_sims: folder of the annotated sample files on mutation level for SIMs  
 #'  @param num_cores: number of cores to be used in mclapply              
-#' @return sample2annotation: sample annotations with: impact classification, functional category, MSI status, IGHV status (Lymph-CLL only), tobacco smoking status, signatures
-annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicationTimeScores, loc_file_drivers, loc_file_IGHV_status, loc_file_MSI_classification_1, loc_file_MSI_classification_2, loc_file_SBS_signatures, loc_file_DBS_signatures, loc_file_ID_signatures,  loc_file_pcawg_smoking_status, dataDir, samplesFolder, num_cores)
+#' @return data.frame with samples annotated with the tumour type, cluster assigned to, MSI status, IGHV status (Lymph-CLL only), tobacco smoking status (when available), contribution of each signature (SBS, DBS and ID) and the summary of the impact classification and functional category of its mutations. 
+annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicationTimeScores_df, metadataDir, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
 {
   
     ###################################################################
@@ -321,9 +323,9 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     ###################################################################
   
     # summarize Impact classification, functional category and replication time annotation to sample level
-    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2ttype_cluster, "ssm", replicationTimeScores, dataDir, samplesFolder, num_cores)
-    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2annotation, "sim", replicationTimeScores, dataDir, samplesFolder, num_cores)
-    
+    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2ttype_cluster, "ssm", annotation_v19, replicationTimeScores_df, annSamplesDir, annSamplesFolder_ssms, num_cores)
+    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2annotation, "sim", annotation_v19, replicationTimeScores_df, annSamplesDir, annSamplesFolder_sims, num_cores)
+
     # combine the list of genes with a coding change due to a SIM and the list for SSMs
     sample2annotation$genes_affected_by_mut <- NA
     sample2annotation$genes_affected_by_mut <- lapply(1:nrow(sample2annotation), function(x) 
@@ -342,8 +344,7 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
       }
       
       return(affected_genes_all)
-    }
-    )
+    })
     
     # count the number of genes with a coding change due to either a SIM or SSM per sample
     sample2annotation$num_genes_affected_by_mut <- unlist(lapply(1:nrow(sample2annotation), function(x) 
@@ -388,7 +389,7 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     ))
     
     # number of SSMs in a gene
-    sample2annotation$num_in_coding_ssms <- stats_pcawg_replTime_genomeAnn$num_ssm_De_novo_Start_InFrame + stats_pcawg_replTime_genomeAnn$num_ssm_De_novo_Start_OutOfFrame + stats_pcawg_replTime_genomeAnn$num_ssm_Missense_Mutation + stats_pcawg_replTime_genomeAnn$num_ssm_Nonsense_Mutation + stats_pcawg_replTime_genomeAnn$num_ssm_Nonstop_Mutation + stats_pcawg_replTime_genomeAnn$num_ssm_Splice_Site + stats_pcawg_replTime_genomeAnn$num_ssm_Start_Codon_SNP + sample2annotation$num_ssm_Silent
+    sample2annotation$num_in_coding_ssms <- sample2annotation$num_ssm_De_novo_Start_InFrame + sample2annotation$num_ssm_De_novo_Start_OutOfFrame + sample2annotation$num_ssm_Missense_Mutation + sample2annotation$num_ssm_Nonsense_Mutation + sample2annotation$num_ssm_Nonstop_Mutation + sample2annotation$num_ssm_Splice_Site + sample2annotation$num_ssm_Start_Codon_SNP + sample2annotation$num_ssm_Silent
     
     # percentage of silent SSMs of the total number of SSMs in a gene
     sample2annotation$perc_silent_ssm_vs_in_coding <- (sample2annotation$num_ssm_Silent*100)/sample2annotation$num_in_coding_ssms
@@ -399,11 +400,11 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     # Predicted drivers #
     #####################
     
-    drivers_per_donor <- read.table(loc_file_drivers, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+    drivers_per_donor <- read.table(paste(metadataDir, "/", filename_drivers, sep=""), sep = "\t", header = TRUE, stringsAsFactors = FALSE)
     
     sample2annotation$drivers <- NA
     
-    for(i in 1:nrow(sample2ttype_cluster)){
+    for(i in 1:nrow(sample2annotation)){
        cur_drivers <-  list(unique(drivers_per_donor[which(drivers_per_donor$sample_id == sample2annotation[i,"tumor_wgs_aliquot_id"]),"gene"]))
        sample2annotation[[i,"drivers"]] <- cur_drivers
        sample2annotation[i,"num_drivers"] <- length(cur_drivers)
@@ -413,22 +414,22 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     # Signatures #
     ##############
     
-    # convert absolute contribution of each SBS signature to perentage and add to annotation
-    sample2signContr_SBS <- read.table(loc_file_SBS_signatures, sep=",", quote = "", header = TRUE)
+    # convert absolute contribution of each SBS signature to perentage and add both to annotation
+    sample2signContr_SBS <- read.table(paste(metadataDir, "/", filename_file_SBS_signatures,sep=""), sep=",", quote = "", header = TRUE)
     colnames(sample2signContr_SBS)[1:3] <- c("tumor_type", "icgc_specimen_id", "Accuracy_SBS")
     sign_SBS_cols <- grep("^SBS", colnames(sample2signContr_SBS),value=TRUE)
     sample2signContr_SBS[,paste("perc_", sign_SBS_cols,sep="")] <- (sample2signContr_SBS[,sign_SBS_cols]*100)/rowSums(sample2signContr_SBS[,sign_SBS_cols])
     sample2annotation <- merge(sample2signContr_SBS,sample2annotation, by.x="icgc_specimen_id", by.y="tumor_wgs_icgc_specimen_id")
     
-    # convert absolute contribution of each DBS signature to perentage and add to annotation
-    sample2signContr_DBS <- read.table(loc_file_DBS_signatures, sep=",", quote = "", header = TRUE)
+    # convert absolute contribution of each DBS signature to perentage and add both to annotation
+    sample2signContr_DBS <- read.table(paste(metadataDir, "/", filename_DBS_signatures,sep=""), sep=",", quote = "", header = TRUE)
     colnames(sample2signContr_DBS)[1:3] <- c("tumor_type", "icgc_specimen_id", "Accuracy_DBS")
     sign_DBS_cols <- grep("^DBS", colnames(sample2signContr_DBS), value=TRUE)
     sample2signContr_DBS[,paste("perc_", sign_DBS_cols,sep="")] <- (sample2signContr_DBS[,sign_DBS_cols]*100)/rowSums(sample2signContr_DBS[,sign_DBS_cols])
     sample2annotation <- merge(sample2signContr_DBS,sample2annotation, by.x="icgc_specimen_id", by.y="tumor_wgs_icgc_specimen_id")
     
-    # convert absolute contribution of each ID signature to perentage and add to annotation
-    sample2signContr_ID <- read.table(loc_file_ID_signatures, sep=",", quote = "", header = TRUE)
+    # convert absolute contribution of each ID signature to perentage and add both to annotation
+    sample2signContr_ID <- read.table(paste(metadataDir, "/", filename_ID_signatures,sep=""), sep=",", quote = "", header = TRUE)
     colnames(sample2signContr_ID)[1:3] <- c("tumor_type", "icgc_specimen_id", "Accuracy_ID")
     sign_ID_cols <- grep("^ID", colnames(sample2signContr_ID), value=TRUE)
     sample2signContr_ID[,paste("perc_", sign_ID_cols,sep="")] <- (sample2signContr_ID[,sign_ID_cols]*100)/rowSums(sample2signContr_ID[,sign_ID_cols])
@@ -456,7 +457,7 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     ###############
     
     #IGHV status is only available for Lymph-CLL samples
-    ighv_info <- read.table(loc_file_IGHV_status, sep="\t", quote = "", na.strings = "",as.is = TRUE, check.names = FALSE, header=TRUE, fill=TRUE)
+    ighv_info <- read.table(paste(metadataDir, "/", filename_IGHV_status,sep=""), sep="\t", quote = "", na.strings = "",as.is = TRUE, check.names = FALSE, header=TRUE, fill=TRUE)
     sample2annotation <- merge(sample2annotation, ighv_info, by.x="submitted_donor_id", by.y="Case", all.x=TRUE)
     
     
@@ -465,7 +466,7 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     ##################
     
     # Add to the smoking status information provided by PCAWG the information provided by TCGA
-    donor2smokingStatus <- getSmokingStatus(loc_file_pcawg_tobacco_status, dataDir)  
+    donor2smokingStatus <- getSmokingStatus(filename_pcawg_tobacco_status, metadataDir)  
     sample2annotation <- merge(sample2annotation, donor2smokingStatus, by="icgc_donor_id", all.x=TRUE)
     
     
@@ -475,12 +476,12 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     
     
     # MSI-Method 1
-    MSI_classification_1 <- read.table(loc_file_MSI_classification_1, sep="\t", quote = "", na.strings = "",as.is = TRUE, check.names = FALSE, header=TRUE, fill=TRUE)
+    MSI_classification_1 <- read.table(paste(metadataDir, "/", filename_MSI_classification_1, sep=""), sep="\t", quote = "", na.strings = "",as.is = TRUE, check.names = FALSE, header=TRUE, fill=TRUE)
     sample2annotation <- merge(sample2annotation, MSI_classification_1, by.x="tumor_wgs_submitter_sample_id", by.y="ID", all.x=TRUE)
     
     # MSI-Method 2
-    MSI_classification_2 <- read.table(loc_file_MSI_classification_2, sep="\t", quote = "", na.strings = "",as.is = TRUE, check.names = FALSE, header=TRUE, fill=TRUE)
-    sample2annotation <- merge(sample2annotation, loc_file_MSI_classification_2, by="tumor_wgs_aliquot_id", all.x=TRUE)
+    MSI_classification_2 <- read.table(paste(metadataDir, "/", filename_MSI_classification_2, sep=""), sep="\t", quote = "", na.strings = "",as.is = TRUE, check.names = FALSE, header=TRUE, fill=TRUE)
+    sample2annotation <- merge(sample2annotation, MSI_classification_2, by="tumor_wgs_aliquot_id", all.x=TRUE)
  
        
     ###############################
@@ -489,6 +490,8 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     
     colsWithMissingData <- apply(sample2annotation, 2, function(x){ any(is.na(x))})
     colsWithMissingData <- names(colsWithMissingData[which(colsWithMissingData ==TRUE)])
+    
+    # for genes_affected_by_ssm, genes_affected_by_sim and genes_affected_by_mut if there are no values it will be NA instead 0. 
     colsWithMissingData <- colsWithMissingData[which(!colsWithMissingData %in% c("genes_affected_by_ssm","genes_affected_by_sim","genes_affected_by_mut"))]
     
     for(i in 1:length(colsWithMissingData))

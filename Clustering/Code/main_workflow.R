@@ -1,6 +1,5 @@
 library(FactoMineR)
 library(vcfR)
-library(RMySQL)
 library(Rsamtools)
 library(parallel)
 
@@ -42,7 +41,7 @@ source("main_utils.R")
     #' @param dataDir: directory where the results of BCFtools are stored
     #' @param rec_mut_file_folder: folder where the results of BCFtools are stored
     #' @param mut_type: SSM or SIM
-    #' @return mapping_vcfs: return file linking the original VCF file to the VCF file with the recurrent SSMs or SIMs
+    #' @return return file linking the original VCF file to the VCF file with the recurrent SSMs or SIMs
     readMapping <- function(dataDir, rec_mut_file_folder, mut_type)
     {
       readme_file <- read.table(file = paste(dataDir, "/", rec_mut_file_folder, "/README.txt",sep=""), header=FALSE,sep = "\t", stringsAsFactors = FALSE, fill=TRUE)
@@ -54,46 +53,38 @@ source("main_utils.R")
       return(mapping_vcfs)
     }
     
-    #' Parse the filename of the VCF file to obtain the tumor_wgs_aliquot_id as a sample id
-    #' Replace sample id by an anonumous identifier from the MySQL databse we used to store the data, as the PCAWG cohort data requires permission to be used.
+    #' Parse the filename of the VCF file to obtain the tumor_wgs_aliquot_id
     #' @param mapping_vcfs: mapping of the original VCF file to the VCF file with the recurrent SSMs or SIMs
-    #' @param mut_type: SSM or SIM
-    #' @return mapping_vcfs_tsampleIndex: file with the mapping between the sample ID and the original VCF file and the VCF file with recurrent SSMs or SIMs
-    addTsampleIndexPCAWG <- function(mapping_vcfs,mut_type)
+    #' @return file with the mapping between the sample ID and the original VCF file and the VCF file with recurrent SSMs or SIMs
+    getAliquotIDFromFilename <- function(mapping_vcfs)
     {
-      con = dbConnect(MySQL(), group='client', dbname="mstobbe_schema")
-      tsample2aliquot <- dbGetQuery(con, paste("SELECT t_sample_index,tumor_wgs_aliquot_id FROM tumor_sample_v2 WHERE representative_t_sample = 1;", sep=""))             
-      
-      mapping_vcfs[,"tumor_wgs_aliquot_id_filename"] <- unlist(lapply(1:nrow(mapping_vcfs), function(x) {
+      mapping_vcfs[,"tumor_wgs_aliquot_id"] <- unlist(lapply(1:nrow(mapping_vcfs), function(x) {
         
         split_dir <- unlist(strsplit(x = mapping_vcfs[x,2], split="/"))
         aliquot_id_filename <- unlist(strsplit(x = split_dir[length(split_dir)], split="\\."))[1]
       }))
       
-      mapping_vcfs_tsampleIndex <- merge(tsample2aliquot, mapping_vcfs, by.x="tumor_wgs_aliquot_id",by.y="tumor_wgs_aliquot_id_filename", all.x=TRUE)
-      
-      mapping_vcfs_tsampleIndex <- mapping_vcfs_tsampleIndex[,c("t_sample_index", paste("loc_recurrent_", mut_type, "_vcf",sep=""), paste("loc_all_", mut_type, "_vcf", sep=""))]
-      colnames(mapping_vcfs_tsampleIndex)[1] <- "sample_id"
-      
-      return(mapping_vcfs_tsampleIndex)
+       return(mapping_vcfs)
     }
     
     #' Construct mapping file linking original VCF file to recurrent VCF file
     #' @param dataDir: directory of the results of the BCFtools
     #' @param rec_sim_file_folder: folder with the results of the BCFtools for SIMs
     #' @param rec_ssm_file_folder: folder with the results of the BCFtools for SSMs
-    #' @return sample_info_file: file with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
-    constructSampleInfoFile <- function(dataDir, rec_sim_file_folder, rec_ssm_file_folder)
+    #' @param aliquot2otherIDs: mapping of the tumor_wgs_aliquot_id to other identifiers needed to link to metadata
+    #' @return file with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
+    constructSampleInfoFile <- function(dataDir, rec_sim_file_folder, rec_ssm_file_folder, aliquot2otherIDs)
     {
       mapping_sim_vcfs <- readMapping(dataDir, rec_sim_file_folder, "sim")
       mapping_ssm_vcfs <- readMapping(dataDir, rec_ssm_file_folder, "ssm")
       
-      mapping_sim_vcfs <- addTsampleIndexPCAWG(mapping_sim_vcfs, "sim")
-      mapping_ssm_vcfs <- addTsampleIndexPCAWG(mapping_ssm_vcfs, "ssm")
+      mapping_sim_vcfs <- getAliquotIDFromFilename(mapping_sim_vcfs)
+      mapping_ssm_vcfs <- getAliquotIDFromFilename(mapping_ssm_vcfs)
       
-      sample_info_file <- merge(mapping_sim_vcfs, mapping_ssm_vcfs, by="sample_id")
-      
-      return(sample_info_file)
+      sample_info <- merge(mapping_sim_vcfs, mapping_ssm_vcfs, by="tumor_wgs_aliquot_id", sort=FALSE)
+      sample_info <- merge(aliquot2otherIDs, sample_info, by="tumor_wgs_aliquot_id", all.y=TRUE, sort=FALSE)
+
+      return(sample_info)
     }
 
 ## B. Compute the 42 features in absolute terms and in terms of percentages (when applicable)  ##
@@ -104,12 +95,12 @@ source("main_utils.R")
   #' @param recVcfIsFiltered: boolean to indicate whether or not the VCF file with the recurrent mutations has been filtered based on the FILTER column
   #' @param file_fastaGenome: location of the file with the genome sequence (GRCh37/h19)
   #' @param num_cores: number of cores to use in mclapply
-  #' @return stats_samples: data.frame with the statistics per sample
+  #' @return data.frame with the statistics per sample
   getStatistics <- function(sample_info_file,vcfIsFiltered,recVcfIsFiltered,file_fastaGenome, num_cores)
   {
     sample_info <- read.table(file = sample_info_file, header=TRUE, sep = "\t", stringsAsFactors = FALSE)
-    
-    stats_samples <- do.call(rbind, mclapply(1:nrow(sample_info), function(x)
+    #nrow(sample_info)
+    stats_samples <- do.call(rbind, mclapply(1:10, function(x)
     {
       # read in VCF file with all SSMs, remove those in the mitochondrion
       ssms_df <- vcf2df(sample_info[x,"loc_all_ssm_vcf"],vcfIsFiltered)
@@ -147,7 +138,7 @@ source("main_utils.R")
   #' @param recurrent_ssms_df: data.frame with the recurrent SSMs of the sample
   #' @param recurrent_sims_df: data.frame with the recurrent SIMs of the sample
   #' @param file_fastaGenome: location of the file with the genome sequence (GRCh37/h19)
-  #' @return stats_sample_complete: all the statistics for the sample
+  #' @return all the statistics for the sample
   processSample <- function(sample_id, ssms_df, sims_df, recurrent_ssms_df,recurrent_sims_df, file_fastaGenome)
   {
     print("start processSample")
@@ -212,7 +203,7 @@ source("main_utils.R")
   #' Compute general and recurrent statistics related to SSMs
   #' @param ssms_df: data.frame with the SSMs of the sample
   #' @param recurrent_ssms_df: data.frame with the recurrent SSMs of the sample
-  #' @return ssm_stats_sample: data.frame with the statistics related to SSMs
+  #' @return data.frame with the statistics related to SSMs
   getStatsSSMs <- function(ssms_df,recurrent_ssms_df)
   {
     print("start getStatsSSMs")
@@ -258,7 +249,7 @@ source("main_utils.R")
   
   #' Count the number of SSMs per subtype
   #' @param ssms_df: data.frame with the SSMs of the sample
-  #' @return num_ssms_per_type: counts per SSM subtype
+  #' @return counts per SSM subtype
   countNumSSMsperType <- function(ssms_df)
   {
     ref2alt <- paste(ssms_df$REF,ssms_df$ALT, sep=">")
@@ -280,7 +271,7 @@ source("main_utils.R")
   #' Compute the statistics for the recurrent SSMs
   #' @param stats_general: general statistics of the sample
   #' @param recurrent_ssms_df: data.frame with the recurrent SSMs of the sample
-  #' @return ssm_rec_stats_sample: data.frame with the statistics for the recurrent SSMs
+  #' @return data.frame with the statistics for the recurrent SSMs
   getRecStatsSSMs <- function(stats_general,recurrent_ssms_df)
   {
     print("start getRecStatsSSMs")
@@ -321,7 +312,7 @@ source("main_utils.R")
   #' Compute general and recurrent statistics related to SIMs
   #' @param sims_df: data.frame with the SIMs of the sample
   #' @param recurrent_sims_df: data.frame with the recurrent SIMs of the sample
-  #' @return sim_stats_sample: data.frame with the statistics related to SIMs
+  #' @return data.frame with the statistics related to SIMs
   getStatsSIMs <- function(sims_df,recurrent_sims_df,file_fastaGenome)
   {
     sim_measures <- c("num_sims", "num_del", "num_ins", "num_del_ins",
@@ -395,7 +386,7 @@ source("main_utils.R")
   
   #' get only the 1 bp SIMs, excluding DELINS (deletions followed by an insertion)
   #' @param sims_df: data.frame with the SIMs of the sample
-  #' @return sim_1bp_calls_noDI: data.frame with all 1bp SIMs excluding DELINS
+  #' @return data.frame with all 1bp SIMs excluding DELINS
   get1bpSIMs <- function(sims_df)
   {
     print("start get1bpSIMs")
@@ -432,7 +423,7 @@ source("main_utils.R")
   #' Compute the statistics for homopolymer context of  bp SIMs
   #' @param sim_1bp_calls: data.frame with all 1 bp SIMs
   #' @param file_fastaGenome: location of the file with the genome sequence (GRCh37/h19)
-  #' @return polymercontext_stats: data.frame with the statistics related to the homopolymer context of 1 bp SIMs
+  #' @return data.frame with the statistics related to the homopolymer context of 1 bp SIMs
   getSIMContextStats <- function(sim_1bp_calls,file_fastaGenome)
   {
     print("start getSIMContextStats")
@@ -519,7 +510,7 @@ source("main_utils.R")
   #' Add a context of 10 bp in 3' direction to the data.frame with 1 bp SIMs
   #' @param sim_1bp_calls: data.frame with the 1bp SIMs
   #' @param file_fastaGenome: location of the file with the genome sequence (GRCh37/h19) 
-  #' @return sim_1bp_calls: data.frame with the 1bp SIMs and a 10 bp sequence context in 3' direction
+  #' @return data.frame with the 1bp SIMs and a 10 bp sequence context in 3' direction
   addContextSIMs <- function(sim_1bp_calls,file_fastaGenome)
   {
     print("start addContextSIMs")
@@ -553,7 +544,7 @@ source("main_utils.R")
   #' Compute the statistics for the recurrent SIMs
   #' @param stats_general: general statistics of the sample
   #' @param recurrent_sims_df: data.frame with the recurrent SIMs of the sample
-  #' @return sim_rec_stats_sample: data.frame with the statistics for the recurrent SIMs
+  #' @return data.frame with the statistics for the recurrent SIMs
   getRecStatsSIMs <- function(stats_general, recurrent_sims_df)
   {
     num_sims <- stats_general$num_sims
@@ -622,7 +613,7 @@ source("main_utils.R")
 #' Note: sample IDs should be used as row names and metadata like tumor type should be left out
 #' @param features: data.frame with the 42 features
 #' @param min_explained_var: threshold for the minimum variance to be explained by the PCs for subsetting
-#' @return res_pca_subsetPCs: PCA object with the subset of PCs
+#' @return PCA object with the subset of PCs
 getPCA <- function(features, min_explained_var)
 {
   res_pca <- PCA(features, scale.unit = TRUE, graph=FALSE)
@@ -649,7 +640,7 @@ getPCA <- function(features, min_explained_var)
 #' Cut the hierarchical tree at 'num_clusters'.
 #' @param res_pca: PCA obejct with the subset of PCs
 #' @param num_clusters: threshold for the hierarchical clustering - number of clusters 
-#' @return res_hcpc: HCPC object
+#' @return HCPC object
 getHCPC <- function(res_pca, num_clusters)
 {
     set.seed(10)
@@ -668,22 +659,27 @@ source("main_sampleLevelAnn.R")
 #' Annotate the samples with metadata to be used to make the plots on cluster level
 #' Required identifiers to link metadata: icgc_donor_id, submitted_donor_id, tumor_wgs_icgc_specimen_id, tumor_wgs_aliquot_id, tcga_donor_uuid, tumor_wgs_submitter_sample_id
 #' @param res_hcpc: HCPC object with the clustering result
+#' @param sample2ttype: samples linked to the tumour type
 #' @param sample_info_file: file with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
 #' @param vcfIsFiltered: boolean to indicate whether or not the VCF file has been filtered based on the FILTER column
-#' @param loc_file_drivers: location of file with predicted driver mutations. To link to PCAWG: tumor_wgs_aliquot_id <--> sample_id, https://www.biorxiv.org/content/10.1101/190330v2
-#' @param loc_file_IGHV_status: location of file with IGHV data. To link to PCAWG: submitted_donor_id <--> Case,  https://www.nature.com/articles/nature14666
-#' @param loc_file_MSI_classification_1: MSI status according to MSI-Method 1. To link to PCAWG: tumor_wgs_submitter_sample_id <--> ID, https://docs.icgc.org/pcawg/data/
-#' @param loc_file_MSI_classification_2: MSI status according to MSI-Method 2. To link to PCAWG:tumor_wgs_aliquot_id <--> tumor_wgs_aliquot_id, https://www.biorxiv.org/content/10.1101/208330v1
-#' @param file_names_replication_time: list of filenames with replication time data (one file per cell line)
-#' @param loc_file_SBS_signatures: SBS Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
-#' @param loc_file_DBS_signatures: DBS Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
-#' @param loc_file_ID_signatures: ID Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
-#' @param loc_file_pcawg_smoking_status: smoking status from PCAWG, extend with TCGA annotation. Annotation PCAWG uses the icgc_donor_id, https://docs.icgc.org/pcawg/data/
-#' @param dataDir: directory of the data
-#' @param samplesFolder: folder of the annotated sample files on mutation level
+#' @param filename_drivers: location of file with predicted driver mutations. To link to PCAWG: tumor_wgs_aliquot_id <--> sample_id, https://www.biorxiv.org/content/10.1101/190330v2
+#' @param filename_IGHV_status: location of file with IGHV data. To link to PCAWG: submitted_donor_id <--> Case,  https://www.nature.com/articles/nature14666
+#' @param filename_MSI_classification_1: MSI status according to MSI-Method 1. To link to PCAWG: tumor_wgs_submitter_sample_id <--> ID, https://docs.icgc.org/pcawg/data/
+#' @param filename_MSI_classification_2: MSI status according to MSI-Method 2. To link to PCAWG:tumor_wgs_aliquot_id <--> tumor_wgs_aliquot_id, https://www.biorxiv.org/content/10.1101/208330v1
+#' @param filenames_replication_time: list of filenames with replication time data (one file per cell line)
+#' @param filename_SBS_signatures: SBS Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
+#' @param filename_DBS_signatures: DBS Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
+#' @param filename_ID_signatures: ID Signature data. To link to PCAWG: tumor_wgs_icgc_specimen_id <--> icgc_specimen_id,  https://www.biorxiv.org/content/10.1101/322859v2
+#' @param filename_pcawg_smoking_status: smoking status from PCAWG. Annotation PCAWG uses the icgc_donor_id, https://docs.icgc.org/pcawg/data/
+#' @param metadataDir: directory where the metadata is stored
+#' @param annSamplesDir: directory where to store the the sample files annotated on mutation level 
+#' @param annSamplesFolder_ssms: folder to store the sample files annotated on mutation level for SSMs
+#' @param annSamplesFolder_sims: folder to store the sample files annotated on mutation level for SIMs
 #' @param num_cores: number of cores to be used in mclapply              
-annotateClusters <- function(res_hcpc, sample_info_file, vcfIsFiltered, loc_file_drivers, loc_file_IGHV_status,loc_file_MSI_classification_1, loc_file_MSI_classification_2,file_names_replication_time, loc_file_SBS_signatures, loc_file_DBS_signatures, loc_file_ID_signatures, location_file_pcawg_smoking_status,  dataDir, samplesDir, resultsDir, num_cores)
+annotateClusters <- function(res_hcpc, sample2ttype, sample_info_file, vcfIsFiltered, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filenames_replication_time, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status,  metadataDir, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
 {  
+  sample_info <- read.table(file = sample_info_file, header=TRUE, sep = "\t", stringsAsFactors = FALSE)
+  
   #clustering results
   res_hcpc$data.clust$sample_id <- rownames(res_hcpc$data.clust)
   
@@ -694,22 +690,22 @@ annotateClusters <- function(res_hcpc, sample_info_file, vcfIsFiltered, loc_file
   sample2ttype_cluster <- sample2ttype_cluster[,c("sample_id", "tumor_type", "cluster")]
   
   # Data downloaded from: https://www.gencodegenes.org/human/releases.html
-  annotation_v19 <- import(paste(dataDir, "gencode.v19.annotation.gtf.gz", sep=""))
+  annotation_v19 <- import(paste(metadataDir, "gencode.v19.annotation.gtf.gz", sep=""))
   
   # Data downloaded from: http://genome.ucsc.edu/cgi-bin/hgFileUi?db=hg19&g=wgEncodeUwRepliSeq - wavelet smoothed signal
-  replicationTimeScores <- readInBigWigFile(file_names_replication_time, dataDir)
+  replicationTimeScores <- readInBigWigFile(file_names_replication_time, metadataDir)
 
   # annotate SSMs with functional category and replication time (impact classification is already available in VCF file)
-  annotateAtMutationLevel(sample_info_file, vcfIsFiltered, "ssms", annotation_v19, replicationTimeScores, resultsDir, num_cores)
+  annotateAtMutationLevel(sample_info, vcfIsFiltered, "ssms", annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder_ssms, num_cores)
   
   # annotate SIMs with functional category and replication time (impact classification is already available in VCF file)
-  annotateAtMutationLevel(sample_info_file, vcfIsFiltered, "sims", annotation_v19, replicationTimeScores, resultsDir, num_cores)
+  annotateAtMutationLevel(sample_info, vcfIsFiltered, "sims", annotation_v19, replicationTimeScores, annSamplesDir,  annSamplesFolder_sims, num_cores)
   
   replicationTimeScores_df <- as.data.frame(replicationTimeScores)
   
   #Summarize to sample level: functional category, replication time, impact classification
   #Add IGHV status, tobacco status, drivers, signatures, MSI
-  sample2annotation2cluster <- annotateAtSampleLevel(sample2ttype_cluster, annotation_v19, replicationTimeScores_df, loc_file_drivers, loc_file_SBS_signatures, loc_file_DBS_signatures, loc_file_ID_signatures, location_file_IGHV_status, location_file_pcawg_tobacco_status, location_file_MSI_classification, dataDir, samplesDir, num_cores)
+  sample2annotation2cluster <- annotateAtSampleLevel(sample2ttype_cluster, annotation_v19, replicationTimeScores_df, metadataDir, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
   
   return(sample2annotation2cluster)
 }
