@@ -62,8 +62,8 @@ summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, anno
   samples_annotatedMutations <- list.files(paste(annSamplesDir, "/", annSamplesFolder, "/",sep=""), pattern = "_annotatedWithGenCode_ReplTime.txt")
 
   # cut offs to be used to separate early from late replication regions.
-  replicationTimeScores_df$score_org_cancer_clines_median <- rowMedians(as.matrix(replicationTimeScores_df[, c("score_org_Helas3_1", "score_org_Mcf7_1", "score_org_Sknsh_1", "score_org_Hepg2_1", "score_org_K562_1")]))
-  median_replTime_median_cancer_clines <- median(replicationTimeScores_df$score_org_cancer_clines_median)
+  replicationTimeScores_df$score_cancer_clines_median <- rowMedians(as.matrix(replicationTimeScores_df[, c("score_Helas3_1", "score_Mcf7_1", "score_Sknsh_1", "score_Hepg2_1", "score_K562_1")]))
+  median_replTime_median_cancer_clines <- median(replicationTimeScores_df$score_cancer_clines_median)
   
   # variant classification which affect coding sequence
   sim_var_class_with_effect <- c("De_novo_Start_InFrame","De_novo_Start_OutOfFrame", "Frame_Shift_Del", "Frame_Shift_Ins", "In_Frame_Del", "In_Frame_Ins", "Splice_Site", "Start_Codon_Del", "Start_Codon_Ins", "Stop_Codon_Del", "Stop_Codon_Ins")
@@ -134,11 +134,11 @@ summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, anno
         
         
         # replication time score annotation
-        cur_sample_mutLevelAnn$score_org_cancer_clines_median <- rowMedians(as.matrix(cur_sample_mutLevelAnn[, c("score_org_Helas3_1", "score_org_Mcf7_1", "score_org_Sknsh_1", "score_org_Hepg2_1", "score_org_K562_1")]))
+        cur_sample_mutLevelAnn$score_cancer_clines_median <- rowMedians(as.matrix(cur_sample_mutLevelAnn[, c("score_Helas3_1", "score_Mcf7_1", "score_Sknsh_1", "score_Hepg2_1", "score_K562_1")]))
         
-        sample2annotation[x,paste("num_late_median_cancer_clines_", mut_type,sep="")] <- nrow(cur_sample_mutLevelAnn[which(cur_sample_mutLevelAnn$score_org_cancer_clines_median < median_replTime_median_cancer_clines),])
+        sample2annotation[x,paste("num_late_median_cancer_clines_", mut_type,sep="")] <- nrow(cur_sample_mutLevelAnn[which(cur_sample_mutLevelAnn$score_cancer_clines_median < median_replTime_median_cancer_clines),])
         
-        sample2annotation[x,paste("num_early_median_cancer_clines_", mut_type,sep="")] <- nrow(cur_sample_mutLevelAnn[which(cur_sample_mutLevelAnn$score_org_cancer_clines_median >= median_replTime_median_cancer_clines),])
+        sample2annotation[x,paste("num_early_median_cancer_clines_", mut_type,sep="")] <- nrow(cur_sample_mutLevelAnn[which(cur_sample_mutLevelAnn$score_cancer_clines_median >= median_replTime_median_cancer_clines),])
         
         sample2annotation[x,paste("num_withReplTime_median_cancer_clines_", mut_type,sep="")] <- sample2annotation[x,paste("num_early_median_cancer_clines_", mut_type,sep="")] + sample2annotation[x,paste("num_late_median_cancer_clines_", mut_type,sep="")]
         
