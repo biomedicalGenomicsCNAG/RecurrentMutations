@@ -1,6 +1,8 @@
 library(rtracklayer)
 library(parallel)
 
+options(scipen=999)
+
 source("main_utils.R")
 
 #' Get the genes with a SSM/SIM ('mut_type') affecting the coding sequence
@@ -11,16 +13,14 @@ source("main_utils.R")
 getAffectedGenes <- function(mut_with_effect, mut_type, annotation_v19)
 {
   # get matches of the list of mutation with the GENODE annotation
-  mutations_granges <- convert2GRanges(mut_with_effect, mut_type)
+  mut_with_effect_granges <- convert2GRanges(mut_with_effect, mut_type, TRUE)
   
-  matches_annotation <- findOverlaps(query = mutations_granges, subject = annotation_v19)
+  matches_annotation <- findOverlaps(query = mut_with_effect_granges, subject = annotation_v19)
   
-  mutations_withMatch <- as.data.frame(mut_with_effect[queryHits(matches_annotation),])
-  annotation_matches <- as.data.frame(annotation[subjectHits(matches_annotation),])
+  mutations_withMatch <- as.data.frame(mut_with_effect_granges[queryHits(matches_annotation),])
+  annotation_matches <- as.data.frame(annotation_v19[subjectHits(matches_annotation),])
   
   mutations_annotated <- unique(cbind(mutations_withMatch, annotation_matches[,c("gene_name", "type")]))
-  
-  mutation_notMatched <- as.data.frame(mut_with_effect[-queryHits(matches_annotation),])
   
   # if a mutation hits a CDS,then  get the corresponding gene
   genesCDS2mut_barcode <- unique(mutations_annotated[which(mutations_annotated$CDS == TRUE & mutations_annotated$type == "CDS"), c("mut_barcode", "gene_name")])
@@ -42,12 +42,6 @@ getAffectedGenes <- function(mut_with_effect, mut_type, annotation_v19)
   
   # if a mutation that does not hit a CDS nor exon nor transcript, but does hit a gene, then get the corresponding gene
   genesGene2mut_barcode <- unique(mut_not_matched_CDS_exon_tx[which(mut_not_matched_CDS_exon_tx$gene == TRUE & mut_not_matched_CDS_exon_tx$type == "gene"), c("mut_barcode", "gene_name")])
-  
-  if(nrow(mutation_notMatched) > 0)
-  {
-    print("mutations not matching in GENCODE --> intergenic")
-    print(mutation_notMatched)
-  }
   
   # combine list of genes hit and return unique list
   genes_affected <- unique(c(genesCDS2mut_barcode$gene_name, genesExon2mut_barcode$gene_name,genesTranscript2mut_barcode$gene_name,genesGene2mut_barcode$gene_name))
@@ -146,11 +140,11 @@ summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, anno
         
         sample2annotation[x,paste("num_early_median_cancer_clines_", mut_type,sep="")] <- nrow(cur_sample_mutLevelAnn[which(cur_sample_mutLevelAnn$score_org_cancer_clines_median >= median_replTime_median_cancer_clines),])
         
-        sample2annotation[x,paste("num_withReplTime_median_cancer_clines_", mut_type,sep="")] <- lateVsEarly_mutation_rate[x,"num_early_median_cancer_clines"] + lateVsEarly_mutation_rate[x,"num_late_median_cancer_clines"]
+        sample2annotation[x,paste("num_withReplTime_median_cancer_clines_", mut_type,sep="")] <- sample2annotation[x,paste("num_early_median_cancer_clines_", mut_type,sep="")] + sample2annotation[x,paste("num_late_median_cancer_clines_", mut_type,sep="")]
         
-        sample2annotation[x,paste("perc_late_median_cancer_clines_", mut_type,sep="")] <- (lateVsEarly_mutation_rate[x,"num_late_median_cancer_clines"]*100)/lateVsEarly_mutation_rate[x,"num_withReplTime_median_cancer_clines"]
+        sample2annotation[x,paste("perc_late_median_cancer_clines_", mut_type,sep="")] <- (sample2annotation[x,paste("num_late_median_cancer_clines_", mut_type,sep="")]*100)/sample2annotation[x,paste("num_withReplTime_median_cancer_clines_", mut_type,sep="")]
         
-        sample2annotation[x,paste("perc_early_median_cancer_clines_", mut_type,sep="")] <- (lateVsEarly_mutation_rate[x,"num_early_median_cancer_clines"]*100)/lateVsEarly_mutation_rate[x,"num_withReplTime_median_cancer_clines"]
+        sample2annotation[x,paste("perc_early_median_cancer_clines_", mut_type,sep="")] <- (sample2annotation[x,paste("num_early_median_cancer_clines_", mut_type,sep="")]*100)/sample2annotation[x,paste("num_withReplTime_median_cancer_clines_", mut_type,sep="")]
       }
       
     } else{

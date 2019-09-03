@@ -4,6 +4,7 @@ library(Rsamtools)
 library(parallel)
 
 source("main_utils.R")
+options(scipen=999)
 
 ############################### 
 # Step 1: Compute 42 features #
@@ -690,16 +691,16 @@ annotateClusters <- function(res_hcpc, sample2ttype, sample_info_file, vcfIsFilt
   sample2ttype_cluster <- sample2ttype_cluster[,c("sample_id", "tumor_type", "cluster")]
   
   # Data downloaded from: https://www.gencodegenes.org/human/releases.html
-  annotation_v19 <- import(paste(metadataDir, "gencode.v19.annotation.gtf.gz", sep=""))
+  annotation_v19 <- import(paste(metadataDir, "/gencode.v19.annotation.gtf.gz", sep=""))
   
   # Data downloaded from: http://genome.ucsc.edu/cgi-bin/hgFileUi?db=hg19&g=wgEncodeUwRepliSeq - wavelet smoothed signal
   replicationTimeScores <- readInBigWigFile(file_names_replication_time, metadataDir)
 
   # annotate SSMs with functional category and replication time (impact classification is already available in VCF file)
-  annotateAtMutationLevel(sample_info, vcfIsFiltered, "ssms", annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder_ssms, num_cores)
+  annotateAtMutationLevel(sample_info, vcfIsFiltered, "ssm", annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder_ssms, num_cores)
   
   # annotate SIMs with functional category and replication time (impact classification is already available in VCF file)
-  annotateAtMutationLevel(sample_info, vcfIsFiltered, "sims", annotation_v19, replicationTimeScores, annSamplesDir,  annSamplesFolder_sims, num_cores)
+  annotateAtMutationLevel(sample_info, vcfIsFiltered, "sim", annotation_v19, replicationTimeScores, annSamplesDir,  annSamplesFolder_sims, num_cores)
   
   replicationTimeScores_df <- as.data.frame(replicationTimeScores)
   

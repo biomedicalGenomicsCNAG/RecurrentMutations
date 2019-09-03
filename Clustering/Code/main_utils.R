@@ -39,8 +39,9 @@ vcf2df <- function(vcf_filename, isFiltered)
 #' Convert the mutations in the data.frame to the GRanges format.
 #' @param mutations_df: mutations in data.frame format
 #' @param mutation_type: SSM or SIM
+#' @param maintainMetadata: boolean to indicate if the columns other than CHROM, POS, REF and ALT in mutations_df should be maintained
 #' @return mutations_granges: mutations in GRange format
-convert2GRanges <- function(mutations_df, mutation_type)
+convert2GRanges <- function(mutations_df, mutation_type, maintainMetadata=FALSE)
 {   
   mut_locs <- unlist(IRangesList(apply(mutations_df, 1, function(x)
   {
@@ -77,6 +78,9 @@ convert2GRanges <- function(mutations_df, mutation_type)
   
   mutations_granges <- GRanges(seqnames=paste("chr", mutations_df$CHROM, sep=""), ranges=mut_locs, strand="*")
   names(mutations_granges) <- NULL
+  
+  if(maintainMetadata)
+      mcols(mutations_granges) <- mutations_df
   
   return(mutations_granges)
 }
