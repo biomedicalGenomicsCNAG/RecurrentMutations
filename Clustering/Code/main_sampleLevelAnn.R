@@ -176,55 +176,55 @@ getSmokingStatus <- function(filename_pcawg_tobacco_status, metadataDir)
   ##############################################
   # Read in TCGA information on smoking status #
   ##############################################
-  blca_tcga_clinical <- read.table(file = paste(metadataDir, "/BLCA_Clinical/Biotab/nationwidechildrens.org_clinical_patient_blca.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  blca_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_blca.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(blca_tcga_clinical) <- blca_tcga_clinical[2,]
   blca_tcga_clinical <- blca_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   blca_tcga_clinical$year_of_tobacco_smoking_onset <- NA
   blca_tcga_clinical <- blca_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  cesc_tcga_clinical <- read.table(file = paste(metadataDir, "/CESC_Clinical/Biotab/nationwidechildrens.org_clinical_patient_cesc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  cesc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_cesc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(cesc_tcga_clinical) <- cesc_tcga_clinical[2,]
   cesc_tcga_clinical <- cesc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   cesc_tcga_clinical$year_of_tobacco_smoking_onset <- NA
   cesc_tcga_clinical <- cesc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  dlbc_tcga_clinical <- read.table(file = paste(metadataDir, "/DLBC_Clinical/Biotab/nationwidechildrens.org_clinical_patient_dlbc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  dlbc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_dlbc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(dlbc_tcga_clinical) <- dlbc_tcga_clinical[2,]
   dlbc_tcga_clinical <- dlbc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   dlbc_tcga_clinical$year_of_tobacco_smoking_onset <- NA
   dlbc_tcga_clinical <- dlbc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  hnsc_tcga_clinical <- read.table(file = paste(metadataDir, "/HNSC_Clinical/Biotab/nationwidechildrens.org_clinical_patient_hnsc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  hnsc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_hnsc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(hnsc_tcga_clinical) <- hnsc_tcga_clinical[2,]
   hnsc_tcga_clinical <- hnsc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   hnsc_tcga_clinical$age_began_smoking_in_years <- NA
   hnsc_tcga_clinical$age_began_smoking_in_years <- NA
   hnsc_tcga_clinical <- hnsc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  kich_tcga_clinical <- read.table(file = paste(metadataDir, "/KICH_Clinical/Biotab/nationwidechildrens.org_clinical_patient_kich.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  kich_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_kich.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(kich_tcga_clinical) <- kich_tcga_clinical[2,]
   kich_tcga_clinical <- kich_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   kich_tcga_clinical$age_began_smoking_in_years <- NA
   kich_tcga_clinical <- kich_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  kirc_tcga_clinical <- read.table(file = paste(metadataDir, "/KIRC_Clinical/Biotab/nationwidechildrens.org_clinical_patient_kirc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  kirc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_kirc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(kirc_tcga_clinical) <- kirc_tcga_clinical[2,]
   kirc_tcga_clinical <- kirc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   kirc_tcga_clinical$age_began_smoking_in_years <- NA
   kirc_tcga_clinical <- kirc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  kirp_tcga_clinical <- read.table(file = paste(metadataDir, "/KIRP_Clinical/Biotab/nationwidechildrens.org_clinical_patient_kirp.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  kirp_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_kirp.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(kirp_tcga_clinical) <- kirp_tcga_clinical[2,]
   kirp_tcga_clinical <- kirp_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked")]
   kirp_tcga_clinical$age_began_smoking_in_years <- NA
   kirp_tcga_clinical <- kirp_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  luad_tcga_clinical <- read.table(file = paste(metadataDir, "/LUAD_Clinical/Biotab/nationwidechildrens.org_clinical_patient_luad.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  luad_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_luad.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(luad_tcga_clinical) <- luad_tcga_clinical[2,]
   luad_tcga_clinical <- luad_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   luad_tcga_clinical <- luad_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   
-  lusc_tcga_clinical <- read.table(file = paste(metadataDir, "/LUSC_Clinical/Biotab/nationwidechildrens.org_clinical_patient_lusc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
+  lusc_tcga_clinical <- read.table(file = paste(metadataDir, "/nationwidechildrens.org_clinical_patient_lusc.txt",sep=""), quote = "", sep = "\t",as.is = TRUE, na.strings = "", check.names = FALSE)
   colnames(lusc_tcga_clinical) <- lusc_tcga_clinical[2,]
   lusc_tcga_clinical <- lusc_tcga_clinical[-c(1:3),c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis","tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
   lusc_tcga_clinical <- lusc_tcga_clinical[,c("bcr_patient_uuid","bcr_patient_barcode","year_of_initial_pathologic_diagnosis", "tobacco_smoking_history", "year_of_tobacco_smoking_onset","stopped_smoking_year", "number_pack_years_smoked","age_began_smoking_in_years")]
