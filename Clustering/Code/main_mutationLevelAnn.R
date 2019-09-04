@@ -111,7 +111,6 @@ addGencodeAnnotation <- function(mutations_granges, annotation_v19, num_cores)
       # annotate per chromsosome
       for(i in 1:length(chromosomes))
       {
-          print(chromosomes[i])
           cur_collapsed <- collapseGenCodeAnnotation(mutations_annotated[which(mutations_annotated$CHROM == chromosomes[i]),], num_cores)
           
           if(i == 1)
