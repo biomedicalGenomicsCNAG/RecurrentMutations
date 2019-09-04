@@ -691,22 +691,22 @@ annotateClusters <- function(res_hcpc, sample2ttype, sample_info_file, vcfIsFilt
   sample2ttype_cluster <- sample2ttype_cluster[,c("sample_id", "tumor_type", "cluster")]
   
   # Data downloaded from: https://www.gencodegenes.org/human/releases.html
-  annotation_v19 <- import(paste(metadataDir, "/gencode.v19.annotation.gtf.gz", sep=""))
+  gencode_annotation_v19 <- import(paste(metadataDir, "/gencode.v19.annotation.gtf.gz", sep=""))
   
   # Data downloaded from: http://genome.ucsc.edu/cgi-bin/hgFileUi?db=hg19&g=wgEncodeUwRepliSeq - wavelet smoothed signal
   replicationTimeScores <- readInBigWigFile(file_names_replication_time, metadataDir)
 
   # annotate SSMs with functional category and replication time (impact classification is already available in VCF file)
-  annotateAtMutationLevel(sample_info, vcfIsFiltered, "ssm", annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder_ssms, num_cores)
+  annotateAtMutationLevel(sample_info, vcfIsFiltered, "ssm", gencode_annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder_ssms, num_cores)
   
   # annotate SIMs with functional category and replication time (impact classification is already available in VCF file)
-  annotateAtMutationLevel(sample_info, vcfIsFiltered, "sim", annotation_v19, replicationTimeScores, annSamplesDir,  annSamplesFolder_sims, num_cores)
+  annotateAtMutationLevel(sample_info, vcfIsFiltered, "sim", gencode_annotation_v19, replicationTimeScores, annSamplesDir,  annSamplesFolder_sims, num_cores)
   
   replicationTimeScores_df <- as.data.frame(replicationTimeScores)
   
   #Summarize to sample level: functional category, replication time, impact classification
   #Add IGHV status, tobacco status, drivers, signatures, MSI
-  sample2annotation2cluster <- annotateAtSampleLevel(sample2ttype_cluster, annotation_v19, replicationTimeScores_df, metadataDir, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
+  sample2annotation2cluster <- annotateAtSampleLevel(sample2ttype_cluster, gencode_annotation_v19, replicationTimeScores_df, metadataDir, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
   
   return(sample2annotation2cluster)
 }

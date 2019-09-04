@@ -72,19 +72,19 @@ collapseGenCodeAnnotation <- function(mutations_annotated, num_cores)
 
 #' Annotate mutations with GENCODE
 #' @param mutations_granges: GRange object with the mutations
-#' @param annotation_v19: GENCODE information (https://www.gencodegenes.org/human/releases.html)
+#' @param gencode_annotation: GRange object with the GENCODE annotation for GRCh37/h19 (https://www.gencodegenes.org/human/releases.html)
 #' @param num_cores: number of cores to use in mclapply
 #' @return data.frame with mutations annotated with GENCODE
-addGencodeAnnotation <- function(mutations_granges, annotation_v19, num_cores)
+addGencodeAnnotation <- function(mutations_granges, gencode_annotation, num_cores)
 {
 
   print("findOverlaps")
-  matches_annotation <- findOverlaps(query = mutations_granges, subject = annotation_v19)
+  matches_annotation <- findOverlaps(query = mutations_granges, subject = gencode_annotation)
   
   mutations_withMatch <- mutations_granges[queryHits(matches_annotation),]
-  annotation_matches <- annotation_v19[subjectHits(matches_annotation),]
+  annotation_matches <- gencode_annotation[subjectHits(matches_annotation),]
   
-  rm(annotation_v19)
+  rm(gencode_annotation)
   gc()
   
   mutations_withMatch$type <- as.character(annotation_matches$type)
@@ -190,12 +190,12 @@ addReplTimeScoresAnnotation <- function(mutations_granges, mutation_type, replic
 #' @param sample_info: data.frame with the mapping between the sample ID, the original VCF file with SSMs, the original VCF file with SIMs, the VCF file with recurrent SSMs and the VCF file with the recurrent SIMs 
 #' @param vcfIsFiltered: boolean to indicate whether or not the VCF file has been filtered based on the FILTER column
 #' @param mutation_type: ssm or sim
-#' @param annotation_v19: GENCODE information (https://www.gencodegenes.org/human/releases.html)
+#' @param gencode_annotation: GENCODE information (https://www.gencodegenes.org/human/releases.html)
 #' @param replicationTimeScores: replication time data
 #' @param annSamplesDir: directory to store the tab-del sample files with the annotated mutations 
 #' @param annSamplesFolder: folder to store the tab-del sample files with the annotated mutations 
 #' @param num_cores: number of cores to use in mclapply
-annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder, num_cores)
+annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, gencode_annotation, replicationTimeScores, annSamplesDir, annSamplesFolder, num_cores)
 {
   isFinished <- mclapply(1:nrow(sample_info), function(x)
   {
@@ -215,7 +215,7 @@ annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, a
     sample_id <- sample_info[x,"sample_id"]
     
     # Add functional category from GenCode
-    mutations_granges_genCode <- addGencodeAnnotation(mutations_granges, annotation_v19, num_cores)
+    mutations_granges_genCode <- addGencodeAnnotation(mutations_granges, gencode_annotation, num_cores)
     
     # Add replication time information
     mutations_granges_genCode_replTime <- addReplTimeScoresAnnotation(mutations_granges_genCode, mutation_type, replicationTimeScores, num_cores)

@@ -7,18 +7,18 @@ source("main_utils.R")
 
 #' Get the genes with a SSM/SIM ('mut_type') affecting the coding sequence
 #' @param mut_with_effect: mutations that change coding sequence
-#' @param mut_type: SSM or SIM
-#' @param annotation_v19: GENCODE annotation for GRCh37/h19
-#' @return genes_affected: list of genes with mutation from the 'mut_with_effect' list.
-getAffectedGenes <- function(mut_with_effect, mut_type, annotation_v19)
+#' @param mut_type: ssm or sim
+#' @param gencode_annotation: GRange object with the GENCODE annotation for GRCh37/h19
+#' @return list of genes with mutation from the 'mut_with_effect' list.
+getAffectedGenes <- function(mut_with_effect, mut_type, gencode_annotation)
 {
   # get matches of the list of mutation with the GENODE annotation
   mut_with_effect_granges <- convert2GRanges(mut_with_effect, mut_type, TRUE)
   
-  matches_annotation <- findOverlaps(query = mut_with_effect_granges, subject = annotation_v19)
+  matches_annotation <- findOverlaps(query = mut_with_effect_granges, subject = gencode_annotation)
   
   mutations_withMatch <- as.data.frame(mut_with_effect_granges[queryHits(matches_annotation),])
-  annotation_matches <- as.data.frame(annotation_v19[subjectHits(matches_annotation),])
+  annotation_matches <- as.data.frame(gencode_annotation[subjectHits(matches_annotation),])
   
   mutations_annotated <- unique(cbind(mutations_withMatch, annotation_matches[,c("gene_name", "type")]))
   
@@ -49,15 +49,16 @@ getAffectedGenes <- function(mut_with_effect, mut_type, annotation_v19)
   return(genes_affected)
 }
 
-#' Summarize the annotation to sample level: impact classification, functional category and replication time scores
-#' @param sample2annotation
-#' @param mut_type: SSM or SIM
-#' @param annotation_v19: GENCODE 
-#' @param replicationTimeScores_df: replication time scores
+#' Summarize the annotation on mutation level to sample level: impact classification, functional category and replication time scores
+#' @param sample2annotation: data.frame with the samples linked to the annotated already added
+#' @param mut_type: ssm or sim
+#' @param gencode_annotation: GRange object with the GENCODE annotation for GRCh37/h19
+#' @param replicationTimeScores_df: data.frame with the eplication time scores
 #' @param annSamplesDir: directory of the annotated samples at mutation level
 #' @param annSamplesFolder: folder of the annotated samples at mutation level
 #' @param num_cores: number of cores to use for mclapply
-summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, annotation_v19, replicationTimeScores_df, annSamplesDir, annSamplesFolder, num_cores)
+#' @return data.frame with the samples linked to additional annotation
+summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, gencode_annotation, replicationTimeScores_df, annSamplesDir, annSamplesFolder, num_cores)
 {
   samples_annotatedMutations <- list.files(paste(annSamplesDir, "/", annSamplesFolder, "/",sep=""), pattern = "_annotatedWithGenCode_ReplTime.txt")
 
@@ -125,7 +126,7 @@ summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, anno
         
         if(nrow(mut_with_effect) > 0)
         {
-          genes_affected <- getAffectedGenes(mut_with_effect, mut_type, annotation_v19)
+          genes_affected <- getAffectedGenes(mut_with_effect, mut_type, gencode_annotation)
           sample2annotation[[x,paste("genes_affected_by_", mut_type, sep="")]] <- list(genes_affected)
           
         }
@@ -294,9 +295,10 @@ getSmokingStatus <- function(filename_pcawg_tobacco_status, metadataDir)
   return(donor2smoking_status)
 }
 
+# Annotate samples with available metadata
 # Metadata: ID in PCAWG <--> ID in metadata file, location data
 #'  @param sample2ttype_cluster: sample linked to tumor type, cluster and identifiers needed to link to annotation
-#'  @param annotation_v19: GENCODE information (https://www.gencodegenes.org/human/releases.html)
+#'  @param gencode_annotation: GENCODE information (https://www.gencodegenes.org/human/releases.html)
 #'  @param replicationTimeScores_df: data.frame with replication time scores
 #'  @param metadataDir: directory in which the metadata is stored
 #'  @param filename_drivers: filename of the file with predicted driver mutations. To link to PCAWG: tumor_wgs_aliquot_id <--> sample_id, https://www.biorxiv.org/content/10.1101/190330v2
@@ -312,7 +314,7 @@ getSmokingStatus <- function(filename_pcawg_tobacco_status, metadataDir)
 #'  @param annSamplesFolder_sims: folder of the annotated sample files on mutation level for SIMs  
 #'  @param num_cores: number of cores to be used in mclapply              
 #' @return data.frame with samples annotated with the tumour type, cluster assigned to, MSI status, IGHV status (Lymph-CLL only), tobacco smoking status (when available), contribution of each signature (SBS, DBS and ID) and the summary of the impact classification and functional category of its mutations. 
-annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicationTimeScores_df, metadataDir, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
+annotateAtSampleLevel <- function(sample2ttype_cluster, gencode_annotation, replicationTimeScores_df, metadataDir, filename_drivers, filename_IGHV_status, filename_MSI_classification_1, filename_MSI_classification_2, filename_SBS_signatures, filename_DBS_signatures, filename_ID_signatures, filename_pcawg_smoking_status, annSamplesDir, annSamplesFolder_ssms, annSamplesFolder_sims, num_cores)
 {
   
     ###################################################################
@@ -320,8 +322,8 @@ annotateAtSampleLevel <- function(sample2ttype_cluster, annotation_v19, replicat
     ###################################################################
   
     # summarize Impact classification, functional category and replication time annotation to sample level
-    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2ttype_cluster, "ssm", annotation_v19, replicationTimeScores_df, annSamplesDir, annSamplesFolder_ssms, num_cores)
-    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2annotation, "sim", annotation_v19, replicationTimeScores_df, annSamplesDir, annSamplesFolder_sims, num_cores)
+    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2ttype_cluster, "ssm", gencode_annotation, replicationTimeScores_df, annSamplesDir, annSamplesFolder_ssms, num_cores)
+    sample2annotation <- summarizeMutAnnotation2SampleLevel(sample2annotation, "sim", gencode_annotation, replicationTimeScores_df, annSamplesDir, annSamplesFolder_sims, num_cores)
 
     # combine the list of genes with a coding change due to a SIM and the list for SSMs
     sample2annotation$genes_affected_by_mut <- NA
