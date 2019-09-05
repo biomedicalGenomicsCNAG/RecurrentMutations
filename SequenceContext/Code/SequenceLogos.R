@@ -16,8 +16,6 @@ library(ggseqlogo)
 #' @param fastafileGenome genome sequence in fasta format
 #'
 #' @return prior_genome
-#'
-#' @examples
 getPriorGenome <- function(fastafileGenome){
   
   genome_dnastringset <- readDNAStringSet(fastafileGenome)
@@ -34,18 +32,15 @@ getPriorGenome <- function(fastafileGenome){
 #' countingSeqContext
 #' 
 #' @description Get nucleotide count per base at each position of the sequence
-#' @param group specific cluster to be analysed (e.g. in case of Cluster A, provide: "cluster_A").
-#' @param subtype mutation type: c("C_A", "C_G", "C_T", "T_A", "T_C", "T_G") (e.g. for evaluating C>A mutations, provide: "C_A" ).
-#' @param selection_case "rec" if wanted to analyse recurrent mutations or "unique" if wanted to analyse non-recurrent mutations.
 #' @param num_bp_context how many bases to extend next to the mutation (going in one direction, the same length will be used for the opposite direction). 
 #' @param sequences character vector of sequences of the same length
 #'
 #' @return seq_context_counts
 #'
-countingSeqContext <- function(group, subtype, selection_case, num_bp_context, sequences){
+countingSeqContext <- function(num_bp_context, sequences){
   
   # Subset the sequence
-  centreMut <- ceiling(nchar(sequences$seq_context_250_bp_pyr[1])/2) #ssm_pyr_standard (variable to choose which case to study, tener en cuenta que no uso el standard tengo que cambiar como calculo Rfreq porque tengo dos nucleotidos en el centro)
+  centreMut <- ceiling(nchar(sequences$seq_context_250_bp_pyr[1])/2)
   seq_context_data <- substr(sequences$seq_context_250_bp_pyr, centreMut-num_bp_context, centreMut+num_bp_context)
   
   # Do the counts
@@ -65,13 +60,12 @@ countingSeqContext <- function(group, subtype, selection_case, num_bp_context, s
 #' @param yminrectsubtype height of the bottom line for the box where the mutation subtype will be indicated.
 #' @param ymaxrectsubtype height of the top line for the box where the mutation subtype will be indicated.
 #' @param ytext height coordinate to plot the mutation subtype.
-#' @param group specific cluster wanted to be analysed (e.g. in case of Cluster A, provide: "cluster_A").
 #' @param subtype mutation type: c("C_A", "C_G", "C_T", "T_A", "T_C", "T_G") (e.g. for evaluating C>A mutations, provide: "C_A" ).
 #' @param n_commas number of sequences used to build the sequence logo (Formatted using comma for the thousand position)
 #'
 #' @return basic_LogoPlot
 #'
-plotLogo21 <- function(data, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, group, subtype, n_commas){
+plotLogo21 <- function(data, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas){
   
   basic_LogoPlot <- ggseqlogo(data, method="custom", seq_type='dna') +
     geom_hline(yintercept=0, size=0.3) +
@@ -175,7 +169,7 @@ SequenceLogo21 <- function(file, num_bp_context, threshold, group, subtype, sele
       if(length(continuous_pos) == length(selected_positions)){    # (Case 1) Selected positions continuous -> UNGAPPED MOTIF
         
         # LOGO 21 positions. Function [5]
-        basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, group, subtype, n_commas) #input data
+        basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas) #input data
         
         LogoPlot <- basic_LogoPlot + annotate('rect', xmin = selected_positions[1]-0.5, xmax = selected_positions[length(selected_positions)]+0.5, ymin = 0.0, ymax = ymaxrect, alpha = .1, col='black', fill='yellow')
         ggsave(paste0(Dir_toSave_logoplot,"LogoPlot_",group,"_",selection_case,"_",subtype,"_seq21.pdf"),  width = 30, height = 20, units = "cm", limitsize = FALSE)
@@ -184,7 +178,7 @@ SequenceLogo21 <- function(file, num_bp_context, threshold, group, subtype, sele
       }else{                                                       # (Case 2) Selected positions non-continuous -> GAPPED MOTIF
         
         # Plot SequenceLogo of 21 positions
-        basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, group, subtype, n_commas)
+        basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas)
         
         # Selected positions
         Breaks <- c(0, which(diff(selected_positions) != 1), length(selected_positions)) 
@@ -203,7 +197,7 @@ SequenceLogo21 <- function(file, num_bp_context, threshold, group, subtype, sele
     }else{                                                         # (Case 3) Normal plot with nothing selected
       
       # Plot SequenceLogo of 21 positions
-      basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, group, subtype, n_commas)
+      basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas)
       # save plot
       ggsave(paste0(Dir_toSave_logoplot,"LogoPlot_",group,"_",selection_case,"_",subtype,"_seq21.pdf"),  width = 30, height = 20, units = "cm", limitsize = FALSE)
       
