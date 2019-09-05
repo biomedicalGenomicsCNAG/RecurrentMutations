@@ -52,9 +52,9 @@ countingSeqContext <- function(num_bp_context, sequences){
 
 
 
-#' plotLogo21
+#' plotBasicSequenceLogo
 #'
-#' @description Plots sequence logo by using ggseqlogo (which in turn makes use of ggolot2)
+#' @description Plots sequence logo by using ggseqlogo (which in turn makes use of ggplot2)
 #' @param data relative frequencies per base and position
 #' @param sequence_length length of the sequence to 
 #' @param yminrectsubtype height of the bottom line for the box where the mutation subtype will be indicated.
@@ -65,7 +65,7 @@ countingSeqContext <- function(num_bp_context, sequences){
 #'
 #' @return basic_LogoPlot
 #'
-plotLogo21 <- function(data, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas){
+plotBasicSequenceLogo <- function(data, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas){
   
   basic_LogoPlot <- ggseqlogo(data, method="custom", seq_type='dna') +
     geom_hline(yintercept=0, size=0.3) +
@@ -169,7 +169,7 @@ SequenceLogo21 <- function(file, num_bp_context, threshold, group, subtype, sele
       if(length(continuous_pos) == length(selected_positions)){    # (Case 1) Selected positions continuous -> UNGAPPED MOTIF
         
         # LOGO 21 positions. Function [5]
-        basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas) #input data
+        basic_LogoPlot <- plotBasicSequenceLogo(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas) #input data
         
         LogoPlot <- basic_LogoPlot + annotate('rect', xmin = selected_positions[1]-0.5, xmax = selected_positions[length(selected_positions)]+0.5, ymin = 0.0, ymax = ymaxrect, alpha = .1, col='black', fill='yellow')
         ggsave(paste0(Dir_toSave_logoplot,"LogoPlot_",group,"_",selection_case,"_",subtype,"_seq21.pdf"),  width = 30, height = 20, units = "cm", limitsize = FALSE)
@@ -178,7 +178,7 @@ SequenceLogo21 <- function(file, num_bp_context, threshold, group, subtype, sele
       }else{                                                       # (Case 2) Selected positions non-continuous -> GAPPED MOTIF
         
         # Plot SequenceLogo of 21 positions
-        basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas)
+        basic_LogoPlot <- plotBasicSequenceLogo(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas)
         
         # Selected positions
         Breaks <- c(0, which(diff(selected_positions) != 1), length(selected_positions)) 
@@ -197,7 +197,7 @@ SequenceLogo21 <- function(file, num_bp_context, threshold, group, subtype, sele
     }else{                                                         # (Case 3) Normal plot with nothing selected
       
       # Plot SequenceLogo of 21 positions
-      basic_LogoPlot <- plotLogo21(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas)
+      basic_LogoPlot <- plotBasicSequenceLogo(R_frequency_prior, sequence_length, yminrectsubtype, ymaxrectsubtype, ytext, subtype, n_commas)
       # save plot
       ggsave(paste0(Dir_toSave_logoplot,"LogoPlot_",group,"_",selection_case,"_",subtype,"_seq21.pdf"),  width = 30, height = 20, units = "cm", limitsize = FALSE)
       
