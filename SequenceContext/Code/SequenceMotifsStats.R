@@ -78,7 +78,7 @@ getSpecificMotifs <- function(index_mut, base, all_motifs)
 #' @param enriched_motifs: one or more enriched motifs found of equal length and ungapped
 #' @param ref_base_mutation: the reference base that is mutated
 #' @param loc_mutation_in_motif: the location of the base in the motif 
-#' @param num_bp_context: number of bp retrieved at both sides of the mutation
+#' @param num_bp_context_available: number of bp retrieved at both sides of the mutation
 #' @param mutations_recurrent: data.frame with the recurrent mutations in the cluster including sequence context 
 #' @param mutations_nonRecurrent: data.frame with the non-recurrent mutations in the cluster including sequence context  
 #' @param file_fastaGenome: location of the file with the genome sequence (GRCh37/h19)
@@ -86,7 +86,7 @@ getSpecificMotifs <- function(index_mut, base, all_motifs)
 #' @example getEnrichmentStatistics("AACTT", "T", 4, mut_rec_clustL_TG, mut_nonRec_clustL_TG, file_fastaGenome)
 #'
 #' @return data.frame with the statistics
-getEnrichmentStatistics <- function(enriched_motifs, ref_base_mutation, loc_mutation_in_motif, num_bp_context, mutations_recurrent, mutations_nonRecurrent, file_fastaGenome)
+getEnrichmentStatistics <- function(enriched_motifs, ref_base_mutation, loc_mutation_in_motif, num_bp_context_available, mutations_recurrent, mutations_nonRecurrent, file_fastaGenome)
 {
   statsEnrichedMotif <- as.data.frame(matrix(data=0, nrow=1, ncol=10))
   colnames(statsEnrichedMotif) <- c("perc_motif_genome_allKmer", "perc_motif_genome_KmerMatchLocSSM", "num_AllSSMs_withEnrichedMotif", "num_recSSMs_withEnrichedMotif", "num_nonRecSSMs_withEnrichedMotif", "num_AllSSMs_withoutEnrichedMotif", "num_recSSMs_withoutEnrichedMotif", "num_nonRecSSMs_withoutEnrichedMotif", "perc_AllSSMs_withEnrichedMotif", "perc_recSSMs_withEnrichedMotif", "perc_nonRecSSMs_withEnrichedMotif")
@@ -105,11 +105,11 @@ getEnrichmentStatistics <- function(enriched_motifs, ref_base_mutation, loc_muta
   statsEnrichedMotif[1, "perc_motif_genome_KmerMatchLocSSM"] <- (counts_enrichedMotif_genome*100)/total_counts_KmerMatchLocSSM
   statsEnrichedMotif[1, "perc_motif_genome_allKmer"] <- (counts_enrichedMotif_genome*100)/total_counts_allKmer
   
-  end_motif <- num_bp_context + 1 + (length_motif-loc_mutation_in_motif)
+  end_motif <- num_bp_context_available + 1 + (length_motif-loc_mutation_in_motif)
   start_motif <- end_motif - length_motif - 1
   
-  mutations_recurrent$seq_context <- substr(x=mutations_recurrent[, paste("seq_context_", num_bp_context, "_bp_pyr",sep="")], start=start_motif, stop=end_motif)
-  mutations_non_recurrent$seq_context <- substr(x=mutations_non_recurrent[, paste("seq_context_", num_bp_context, "_bp_pyr",sep="")], start=start_motif, stop=end_motif)
+  mutations_recurrent$seq_context <- substr(x=mutations_recurrent[, paste("seq_context_", num_bp_context_available, "_bp_pyr",sep="")], start=start_motif, stop=end_motif)
+  mutations_non_recurrent$seq_context <- substr(x=mutations_non_recurrent[, paste("seq_context_", num_bp_context_available, "_bp_pyr",sep="")], start=start_motif, stop=end_motif)
   
   counts_Kmers_allSSMs <- table(c(mutations_recurrent[, "seq_context"],mutations_non_recurrent[, "seq_context"]))
   counts_Kmers_recSSMs <- table(mutations_recurrent[, "seq_context"])
