@@ -54,7 +54,7 @@ countingSeqContext <- function(num_bp_context, sequences){
 
 #' plotBasicSequenceLogo
 #'
-#' @description Plots sequence logo by using ggseqlogo (which in turn makes use of ggplot2)
+#' @description Plots sequence logo by using ggseqlogo (which in turn makes use of gglot2)
 #' @param data relative frequencies per base and position
 #' @param sequence_length length of the sequence to 
 #' @param yminrectsubtype height of the bottom line for the box where the mutation subtype will be indicated.
