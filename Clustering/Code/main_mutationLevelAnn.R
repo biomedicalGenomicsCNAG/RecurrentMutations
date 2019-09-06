@@ -75,49 +75,52 @@ collapseGenCodeAnnotation <- function(mutations_annotated, num_cores)
 #' @param gencode_annotation: GRange object with the GENCODE annotation for GRCh37/h19 (https://www.gencodegenes.org/human/releases.html)
 #' @param num_cores: number of cores to use in mclapply
 #' @return data.frame with mutations annotated with GENCODE
-addGencodeAnnotation <- function(mutations_granges, gencode_annotation, num_cores)
+addGencodeAnnotation <- function(mutations_granges, annotation_v19, num_cores)
 {
-
+  
   print("findOverlaps")
-  matches_annotation <- findOverlaps(query = mutations_granges, subject = gencode_annotation)
+  matches_annotation <- findOverlaps(query = mutations_granges, subject = annotation_v19)
   
-  mutations_withMatch <- mutations_granges[queryHits(matches_annotation),]
-  annotation_matches <- gencode_annotation[subjectHits(matches_annotation),]
+  mutations_annotated <- mutations_granges[queryHits(matches_annotation),]
+  annotation_matches <- annotation_v19[subjectHits(matches_annotation),]
   
-  rm(gencode_annotation)
+  rm(annotation_v19)
   gc()
   
-  mutations_withMatch$type <- as.character(annotation_matches$type)
-
+  mutations_annotated$type <- as.character(annotation_matches$type)
+  
+  
   mutation_notMatched <- mutations_granges[-queryHits(matches_annotation),]
-  mutation_notMatched$type <- "intergenic"
   
+  if(length(mutation_notMatched) > 0)
+  {
+    mutation_notMatched$type <- "intergenic"
+    mutations_annotated <- c(mutations_annotated, mutation_notMatched)
+  }
   
-  mutations_annotated <- c(mutations_withMatch, mutation_notMatched)
-
-  rm(annotation_matches)
   rm(mutation_notMatched)
   rm(mutations_granges)
   rm(matches_annotation)
   gc()
   
-  if(length(mutations_withMatch) > 1)
+  if(length(annotation_matches) > 1)
   {
-      rm(mutations_withMatch)
+    rm(annotation_matches)
+    gc()
     
-      chromosomes <- sort(unique(as.character(mutations_annotated$CHROM)))
+    chromosomes <- sort(unique(as.character(mutations_annotated$CHROM)))
+    
+    print("collapseAnnotation")
+    # annotate per chromsosome
+    for(i in 1:length(chromosomes))
+    {
+      cur_collapsed <- collapseGenCodeAnnotation(mutations_annotated[which(mutations_annotated$CHROM == chromosomes[i]),], num_cores)
       
-      print("collapseAnnotation")
-      # annotate per chromsosome
-      for(i in 1:length(chromosomes))
-      {
-          cur_collapsed <- collapseGenCodeAnnotation(mutations_annotated[which(mutations_annotated$CHROM == chromosomes[i]),], num_cores)
-          
-          if(i == 1)
-            mutations2gencode <-cur_collapsed
-          else 
-            mutations2gencode <- c(mutations2gencode, cur_collapsed)
-      }
+      if(i == 1)
+        mutations2gencode <-cur_collapsed
+      else 
+        mutations2gencode <- c(mutations2gencode, cur_collapsed)
+    }
   } else {
     mutations2gencode <- mutations_annotated
   }
@@ -161,29 +164,32 @@ collapseReplTimeScores <- function(mutations_replTimeScores, num_cores)
 #' @return data.frame with mutations annotated with replication time scores
 addReplTimeScoresAnnotation <- function(mutations_granges, mutation_type, replicationTimeScores, num_cores)
 {
-    all_matches <- findOverlaps(query = mutations_granges, subject = replicationTimeScores)
+  all_matches <- findOverlaps(query = mutations_granges, subject = replicationTimeScores)
+  
+  mutations_withMatch <- mutations_granges[queryHits(all_matches),]
+  replTimeScores <- replicationTimeScores[subjectHits(all_matches),]
+  
+  mutations_replTimeScores <- mutations_withMatch
+  mcols(mutations_replTimeScores) <- cbind(mcols(mutations_withMatch), mcols(replTimeScores)[,grep("score",colnames(mcols(replTimeScores)))])
+  
+  if(mutation_type == "sim")
+  {
+    mutations_replTimeScores <- collapseReplTimeScores(mutations_replTimeScores, num_cores)
+  }
+  
+  mutations_notMatched <- mutations_granges[-queryHits(all_matches),]
+  
+  if(length(mutations_notMatched) > 0){
     
-    mutations_withMatch <- mutations_granges[queryHits(all_matches),]
-    replTimeScores <- replicationTimeScores[subjectHits(all_matches),]
+    cols_replTimeScores <- grep("score",colnames(mcols(replTimeScores)), value=TRUE)
+    dummy_df <- as.data.frame(matrix(nrow=length(mutations_notMatched), ncol=length(cols_replTimeScores)))
+    colnames(dummy_df) <- cols_replTimeScores
+    mcols(mutations_notMatched) <- cbind(mcols(mutations_notMatched), dummy_df)
     
-    mutations_replTimeScores <- mutations_withMatch
-    mcols(mutations_replTimeScores) <- cbind(mcols(mutations_withMatch), mcols(replTimeScores)[,grep("score",colnames(mcols(replTimeScores)))])
-    
-    if(mutation_type == "sim")
-    {
-      mutations_replTimeScores <- collapseReplTimeScores(mutations_replTimeScores, num_cores)
-    }
-    
-    mutation_notMatched <- mutations_granges[-queryHits(all_matches),]
-    
-    if(length(mutation_notMatched) > 0)
-    {
-        print("missing")
-    }
-    
-    mutations_replTimeScores <- c(mutations_replTimeScores, mutation_notMatched)
-    
-    return(mutations_replTimeScores)
+    mutations_replTimeScores <- c(mutations_replTimeScores, mutations_notMatched)
+  }
+  
+  return(mutations_replTimeScores)
 }
 
 #' Annotate the mutations with the functional category retrieved from GENCODE and the replication time scores retrieved from ENCODE/University of Washington. #
@@ -195,11 +201,13 @@ addReplTimeScoresAnnotation <- function(mutations_granges, mutation_type, replic
 #' @param annSamplesDir: directory to store the tab-del sample files with the annotated mutations 
 #' @param annSamplesFolder: folder to store the tab-del sample files with the annotated mutations 
 #' @param num_cores: number of cores to use in mclapply
-annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, gencode_annotation, replicationTimeScores, annSamplesDir, annSamplesFolder, num_cores)
+annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, annotation_v19, replicationTimeScores, annSamplesDir, annSamplesFolder, num_cores)
 {
   isFinished <- mclapply(1:nrow(sample_info), function(x)
   {
-    print(x)
+    sample_id <- sample_info[x,"sample_id"]
+    
+    print(sample_id)
     
     # read in VCF file with mutations
     if(mutation_type == "ssm")
@@ -207,27 +215,31 @@ annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, g
     else 
       mutations_df <- vcf2df(sample_info[x,"loc_all_sim_vcf"],vcfIsFiltered)
     
-    mutations_df$mut_barcode <-  paste(mutations_df$CHROM, mutations_df$POS, mutations_df$REF, mutations_df$ALT, sep="_")
-    
-    #convert to GRange format
-    mutations_granges <- convert2GRanges(mutations_df, mutation_type, TRUE)
-    
-    sample_id <- sample_info[x,"sample_id"]
-    
-    # Add functional category from GenCode
-    mutations_granges_genCode <- addGencodeAnnotation(mutations_granges, gencode_annotation, num_cores)
-    
-    # Add replication time information
-    mutations_granges_genCode_replTime <- addReplTimeScoresAnnotation(mutations_granges_genCode, mutation_type, replicationTimeScores, num_cores)
-    
-    rm(mutations_granges_genCode)
-    gc()
-    
-    write.table(mutations_granges_genCode_replTime, file=paste(annSamplesDir, "/", annSamplesFolder, "/", sample_id, "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = FALSE, sep="\t",row.names = FALSE, col.names = TRUE)
-    
-    
-    rm(mutations_granges_genCode_replTime)
-    gc()
+    if(nrow(mutations_df) > 1)
+    {
+      mutations_df$mut_barcode <-  paste(mutations_df$CHROM, mutations_df$POS, mutations_df$REF, mutations_df$ALT, sep="_")
+      
+      #convert to GRange format
+      mutations_granges <- convert2GRanges(mutations_df, mutation_type, TRUE)
+      
+      # Add functional category from GenCode
+      mutations_granges_genCode <- addGencodeAnnotation(mutations_granges, annotation_v19, num_cores)
+      
+      # Add replication time information
+      mutations_granges_genCode_replTime <- addReplTimeScoresAnnotation(mutations_granges_genCode, mutation_type, replicationTimeScores, num_cores)
+      
+      rm(mutations_granges_genCode)
+      gc()
+      
+      write.table(mutations_granges_genCode_replTime, file=paste(annSamplesDir, "/", annSamplesFolder, "/", sample_id, "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = FALSE, sep="\t",row.names = FALSE, col.names = TRUE)
+      
+      
+      rm(mutations_granges_genCode_replTime)
+      gc()
+    } else {
+      print("No mutations")
+      print(sample_id)
+    }
     
     
     return(1)
