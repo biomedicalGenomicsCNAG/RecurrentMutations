@@ -40,10 +40,12 @@ getSeqContextSSMs <- function(mutations_df,num_bp_context, file_fastaGenome)
 #' @param resultsFolder: folder to store mutations with the sequence context
 addSequenceContexts2SSMs <- function(sample_info_file, filename_column, isFiltered, num_bp_context, file_fastaGenome,dataDir, samplesFolder, resultsDir, resultsFolder, num_cores)
 {
-  tmp <- mclapply(1:rnow(sample_info_file), function(x)
+  sample_info <- read.table(file = sample_info_file, header=TRUE, sep = "\t", stringsAsFactors = FALSE)
+  
+  tmp <- mclapply(1:nrow(sample_info), function(x)
   {
 
-    mutations_df <- vcf2df(paste(dataDir, "/", samplesFolder, "/", sample_info_file[x, filename_column],sep=""), isFiltered)
+    mutations_df <- vcf2df(paste(dataDir, "/", samplesFolder, "/", sample_info[x, filename_column],sep=""), isFiltered)
     
     
     mutations_withContext <- getSeqContextSSMs(mutations_df,num_bp_context, file_fastaGenome)
@@ -70,7 +72,7 @@ addSequenceContexts2SSMs <- function(sample_info_file, filename_column, isFilter
     mutations_withContext[which(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T")),paste("seq_context_", num_bp_context, "_bp_pyr_standard",sep="")] <- as.character(reverseComplement(DNAStringSet(mutations_withContext[which(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T")),paste("seq_context_", num_bp_context, "_bp_refStrand",sep="")])))
     mutations_withContext[which(!(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T"))),paste("seq_context_", num_bp_context, "_bp_pyr_standard",sep="")] <- mutations_withContext[which(!(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T"))),paste("seq_context_", num_bp_context, "_bp_refStrand",sep="")]
     
-    write.table(mutations_withContext, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info_file[x, "sample_id"],"_withSeqContext.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
+    write.table(mutations_withContext, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
     
   }, mc.cores=num_cores)
 }
