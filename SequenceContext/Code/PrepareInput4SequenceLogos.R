@@ -37,12 +37,12 @@ getSeqContextSSMs <- function(mutations_df,num_bp_context, file_fastaGenome)
 #' @param dataDir: directory where the data is stored
 #' @param samplesFolder: folder where the VCF files are stored
 #' @param resultsDir: diretory to store mutations with the sequence context
-addSequenceContexts2SSMs <- function(sample_info_file, isFiltered, num_bp_context, file_fastaGenome,dataDir, samplesFolder, num_cores)
+addSequenceContexts2SSMs <- function(sample_info_file, filename_column, isFiltered, num_bp_context, file_fastaGenome,dataDir, samplesFolder, num_cores)
 {
   tmp <- mclapply(1:rnow(sample_info_file), function(x)
   {
 
-    mutations_df <- vcf2df(paste(dataDir, "/", samplesFolder, "/", sample_info_file[x, "filename"],sep=""), isFiltered)
+    mutations_df <- vcf2df(paste(dataDir, "/", samplesFolder, "/", sample_info_file[x, filename_column],sep=""), isFiltered)
     
     
     mutations_withContext <- getSeqContextSSMs(mutations_df,num_bp_context, file_fastaGenome)
