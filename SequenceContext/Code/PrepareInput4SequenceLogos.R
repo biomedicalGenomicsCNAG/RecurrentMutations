@@ -44,35 +44,35 @@ addSequenceContexts2SSMs <- function(sample_info_file, filename_column, isFilter
   
   tmp <- mclapply(1:nrow(sample_info), function(x)
   {
+    mutations_df <- vcf2df(sample_info[x,filename_column], isFiltered)
 
-    mutations_df <- vcf2df(paste(dataDir, "/", samplesFolder, "/", sample_info[x, filename_column],sep=""), isFiltered)
-    
-    
     mutations_withContext <- getSeqContextSSMs(mutations_df,num_bp_context, file_fastaGenome)
     
-    mutations_withContext$ssm_ref_strand <- paste(mutations_withContext$REF, ">", mutations_withContext$ALT, sep="")
+    mutations_withContext$subtype <- paste(mutations_withContext$REF, ">", mutations_withContext$ALT, sep="")
     
-    mutations_withContext[which(mutations_withContext$REF == "A"), "REF_nonRefStrand"] <- "T"
-    mutations_withContext[which(mutations_withContext$REF == "C"), "REF_nonRefStrand"] <- "G"
-    mutations_withContext[which(mutations_withContext$REF == "G"), "REF_nonRefStrand"] <- "C"
-    mutations_withContext[which(mutations_withContext$REF == "T"), "REF_nonRefStrand"] <- "A"
+    mutations_withContext[which(mutations_withContext$subtype %in% c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G")),paste("seq_context_", num_bp_context, "_bp_pyr",sep="")] <- mutations_withContext[which(mutations_withContext$subtype %in% c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G")),"seq_context"]
+    mutations_withContext[which(mutations_withContext$subtype %in% c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G")),paste("seq_context_", num_bp_context, "_bp_pur",sep="")] <- as.character(reverseComplement(DNAStringSet(mutations_withContext[which(mutations_withContext$subtype %in% c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G")),"seq_context"])))
     
-    mutations_withContext[which(mutations_withContext$ALT == "A"), "ALT_nonRefStrand"] <- "T"
-    mutations_withContext[which(mutations_withContext$ALT == "C"), "ALT_nonRefStrand"] <- "G"
-    mutations_withContext[which(mutations_withContext$ALT == "G"), "ALT_nonRefStrand"] <- "C"
-    mutations_withContext[which(mutations_withContext$ALT == "T"), "ALT_nonRefStrand"] <- "A"
+    mutations_withContext[which(mutations_withContext$subtype %in% c("G>T", "G>C", "G>A", "A>T", "A>G", "A>C")),paste("seq_context_", num_bp_context, "_bp_pyr",sep="")] <- as.character(reverseComplement(DNAStringSet(mutations_withContext[which(mutations_withContext$subtype %in% c("G>T", "G>C", "G>A", "A>T", "A>G", "A>C")),"seq_context"])))
+    mutations_withContext[which(mutations_withContext$subtype %in% c("G>T", "G>C", "G>A", "A>T", "A>G", "A>C")),paste("seq_context_", num_bp_context, "_bp_pur",sep="")] <- mutations_withContext[which(mutations_withContext$subtype %in% c("G>T", "G>C", "G>A", "A>T", "A>G", "A>C")), "seq_context"]
     
-    mutations_withContext$ssm_rev_compl <- paste(mutations_withContext$REF_nonRefStrand, ">", mutations_withContext$ALT_nonRefStrand, sep="")
-    mutations_withContext$ssm_pyr_standard <- mutations_withContext$ssm_ref_strand
-    mutations_withContext[which(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T")),"ssm_pyr_standard"] <- paste(mutations_withContext$REF_nonRefStrand, ">", mutations_withContext$ALT_nonRefStrand, sep="")
+    mutations_withContext_CA <- mutations_withContext[which(mutations_withContext$subtype %in% c("C>A", "G>T")),]
+    write.table(mutations_withContext_CA, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext_CA.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
     
-    mutations_withContext[,paste("seq_context_", num_bp_context, "_bp_refStrand",sep="")] <- mutations_withContext$seq_context
-    mutations_withContext[,paste("seq_context_", num_bp_context, "_bp_rev_compl",sep="")] <- as.character(reverseComplement(DNAStringSet(mutations_withContext[,paste("seq_context_", num_bp_context, "_bp_refStrand",sep="")])))
+    mutations_withContext_CG <- mutations_withContext[which(mutations_withContext$subtype %in% c("C>G", "G>C")),]
+    write.table(mutations_withContext_CG, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext_CG.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
     
-    mutations_withContext[which(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T")),paste("seq_context_", num_bp_context, "_bp_pyr_standard",sep="")] <- as.character(reverseComplement(DNAStringSet(mutations_withContext[which(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T")),paste("seq_context_", num_bp_context, "_bp_refStrand",sep="")])))
-    mutations_withContext[which(!(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T"))),paste("seq_context_", num_bp_context, "_bp_pyr_standard",sep="")] <- mutations_withContext[which(!(mutations_withContext$ssm_ref_strand %in% c("A>C", "A>G", "A>T", "G>A", "G>C", "G>T"))),paste("seq_context_", num_bp_context, "_bp_refStrand",sep="")]
+    mutations_withContext_CT <- mutations_withContext[which(mutations_withContext$subtype %in% c("C>T", "G>A")),]
+    write.table(mutations_withContext_CT, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext_CT.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
     
-    write.table(mutations_withContext, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
+    mutations_withContext_TA <- mutations_withContext[which(mutations_withContext$subtype %in% c("T>A", "A>T")),]
+    write.table(mutations_withContext_TA, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext_TA.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
+    
+    mutations_withContext_TC <- mutations_withContext[which(mutations_withContext$subtype %in% c("T>C", "A>G")),]
+    write.table(mutations_withContext_TC, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext_TC.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
+    
+    mutations_withContext_TG <- mutations_withContext[which(mutations_withContext$subtype %in% c("T>G", "A>C")),]
+    write.table(mutations_withContext_TG, file=paste(resultsDir, "/", resultsFolder, "/ssms_",sample_info[x, "sample_id"],"_withSeqContext_TG.txt",sep=""), quote = FALSE,sep="\t", row.names = FALSE, col.names = TRUE)
     
   }, mc.cores=num_cores)
 }
