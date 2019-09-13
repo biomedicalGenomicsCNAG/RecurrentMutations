@@ -100,8 +100,8 @@ options(scipen=999)
   getStatistics <- function(sample_info_file,vcfIsFiltered,recVcfIsFiltered,file_fastaGenome, num_cores)
   {
     sample_info <- read.table(file = sample_info_file, header=TRUE, sep = "\t", stringsAsFactors = FALSE)
-    #nrow(sample_info)
-    stats_samples <- do.call(rbind, mclapply(1:10, function(x)
+    
+    stats_samples <- do.call(rbind, mclapply(1:nrow(sample_info), function(x)
     {
       # read in VCF file with all SSMs, remove those in the mitochondrion
       ssms_df <- vcf2df(sample_info[x,"loc_all_ssm_vcf"],vcfIsFiltered)
