@@ -278,8 +278,6 @@ plotCorrelationBetweenFeatures <- function(all_correlations, features_names, res
   
   adjusted_pvals[lower.tri(adjusted_pvals)] <- t(adjusted_pvals)[lower.tri(adjusted_pvals)]
   
-  corr_features_spearman <-rcorr(as.matrix(features4corr), type="spearman")
-  
   # plot the correlations
   pdf(paste(resultsDir, "correlation_plot_features.pdf",sep=""))
   
