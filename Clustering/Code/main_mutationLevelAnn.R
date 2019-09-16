@@ -103,7 +103,7 @@ addGencodeAnnotation <- function(mutations_granges, annotation_v19, num_cores)
   rm(matches_annotation)
   gc()
   
-  if(length(annotation_matches) > 1)
+  if(length(annotation_matches) > 0)
   {
     rm(annotation_matches)
     gc()
@@ -215,7 +215,7 @@ annotateAtMutationLevel <- function(sample_info, vcfIsFiltered, mutation_type, a
     else 
       mutations_df <- vcf2df(sample_info[x,"loc_all_sim_vcf"],vcfIsFiltered)
     
-    if(nrow(mutations_df) > 1)
+    if(nrow(mutations_df) > 0)
     {
       mutations_df$mut_barcode <-  paste(mutations_df$CHROM, mutations_df$POS, mutations_df$REF, mutations_df$ALT, sep="_")
       
