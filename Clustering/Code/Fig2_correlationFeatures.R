@@ -1,3 +1,5 @@
+library(corrplot)
+library(Hmisc)
 
 #' Get all correlations and correct for multiple-testing
 #' @param sample2featuresAbsAndPerc: sample linked to the features in absolute number and in percentages
@@ -255,9 +257,13 @@ plotCorrelationBetweenFeatures <- function(all_correlations, features_names, res
 {
   
   # Get the correlations and adjusted p-values for the 42 features
-  corrected_pval_all <- matrix(nrow=length(features_names), ncol=length(features_names))
-  colnames(corrected_pval_all) <- features_names
-  rownames(corrected_pval_all) <- features_names
+  adjusted_pvals <- matrix(nrow=length(features_names), ncol=length(features_names))
+  colnames(adjusted_pvals) <- features_names
+  rownames(adjusted_pvals) <- features_names
+  
+  correlations <- matrix(nrow=length(features_names), ncol=length(features_names))
+  colnames(correlations) <- features_names
+  rownames(correlations) <- features_names
   
   for(i in 1:(length(features_names)-1)){
     
@@ -265,16 +271,19 @@ plotCorrelationBetweenFeatures <- function(all_correlations, features_names, res
     
     for(j in curStart:length(features_names)){
       
-      corrected_pval_all[features_names[i], features_names[j]] <- all_correlations[which(all_correlations$feature_1 == features_names[i] & all_correlations$feature_2 == features_names[j]), "pval_adj"]
+      adjusted_pvals[features_names[i], features_names[j]] <- all_correlations[which(all_correlations$feature_1 == features_names[i] & all_correlations$feature_2 == features_names[j]), "pval_adj"]
+      correlations[features_names[i], features_names[j]] <- all_correlations[which(all_correlations$feature_1 == features_names[i] & all_correlations$feature_2 == features_names[j]), "correlation"]
     }
   }
   
-  corrected_pval_all[lower.tri(corrected_pval_all)] <- t(corrected_pval_all)[lower.tri(corrected_pval_all)]
+  adjusted_pvals[lower.tri(adjusted_pvals)] <- t(adjusted_pvals)[lower.tri(adjusted_pvals)]
+  
+  corr_features_spearman <-rcorr(as.matrix(features4corr), type="spearman")
   
   # plot the correlations
   pdf(paste(resultsDir, "correlation_plot_features.pdf",sep=""))
   
-  corrplot(corr_features_spearman$r, order="original", p.mat = corrected_pval_all, sig.level = 0.05,pch.cex=0.5, tl.cex=0.5, tl.col="black")
+  corrplot(correlations, order="original", p.mat = adjusted_pvals, sig.level = 0.05,pch.cex=0.5, tl.cex=0.5, tl.col="black")
   
   dev.off()
 }
