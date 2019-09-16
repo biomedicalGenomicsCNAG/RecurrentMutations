@@ -68,8 +68,7 @@ plotAssociationOfFeatures2Clusters <- function(descr_var_hcpc, feature_names, cl
   
   p_heat <- ggplot(features2vtestVal_m, aes(x=cluster,y=feature_names, fill = vtest)) + 
     geom_tile(color="black") +
-    geom_text(aes(label = round(vtest, 1)), size=2) +
-    scale_fill_gradient2(low="black", high="grey90", na.value = "white", mid="grey45") +
+    scale_fill_gradient2(low="darkred", high="green", na.value = "white", mid="grey90") +
     scale_x_discrete(expand=c(0,0)) +
     theme(axis.title=element_blank())
   ggsave(file=paste(resultsDir, "/", plotname, ".pdf", sep=""))
