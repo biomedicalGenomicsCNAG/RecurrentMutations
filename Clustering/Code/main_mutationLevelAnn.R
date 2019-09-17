@@ -89,8 +89,10 @@ addGencodeAnnotation <- function(mutations_granges, annotation_v19, num_cores)
   
   mutations_annotated$type <- as.character(annotation_matches$type)
   
-  
-  mutation_notMatched <- mutations_granges[-queryHits(matches_annotation),]
+  if(length(queryHits(matches_annotation)) > 0)
+    mutation_notMatched <- mutations_granges[-queryHits(matches_annotation),]
+  else
+    mutation_notMatched <- mutations_granges
   
   if(length(mutation_notMatched) > 0)
   {
