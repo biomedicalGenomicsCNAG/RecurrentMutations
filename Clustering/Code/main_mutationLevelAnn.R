@@ -105,26 +105,18 @@ addGencodeAnnotation <- function(mutations_granges, annotation_v19, num_cores)
   rm(matches_annotation)
   gc()
   
-  if(length(annotation_matches) > 0)
+   chromosomes <- sort(unique(as.character(mutations_annotated$CHROM)))
+  
+  print("collapseAnnotation")
+  # annotate per chromsosome
+  for(i in 1:length(chromosomes))
   {
-    rm(annotation_matches)
-    gc()
+    cur_collapsed <- collapseGenCodeAnnotation(mutations_annotated[which(mutations_annotated$CHROM == chromosomes[i]),], num_cores)
     
-    chromosomes <- sort(unique(as.character(mutations_annotated$CHROM)))
-    
-    print("collapseAnnotation")
-    # annotate per chromsosome
-    for(i in 1:length(chromosomes))
-    {
-      cur_collapsed <- collapseGenCodeAnnotation(mutations_annotated[which(mutations_annotated$CHROM == chromosomes[i]),], num_cores)
-      
-      if(i == 1)
-        mutations2gencode <-cur_collapsed
-      else 
-        mutations2gencode <- c(mutations2gencode, cur_collapsed)
-    }
-  } else {
-    mutations2gencode <- mutations_annotated
+    if(i == 1)
+      mutations2gencode <-cur_collapsed
+    else 
+      mutations2gencode <- c(mutations2gencode, cur_collapsed)
   }
   
   rm(mutations_annotated)
