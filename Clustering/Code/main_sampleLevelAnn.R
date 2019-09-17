@@ -90,7 +90,7 @@ summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, genc
   
   sample2annotation <- do.call(rbind, mclapply(1:nrow(sample2annotation), function(x)
   {
-    
+
     if(paste(sample2annotation[x, "sample_id"], "_annotatedWithGenCode_ReplTime.txt", sep="") %in% samples_annotatedMutations)
     {
       cur_sample_mutLevelAnn <- read.table(file=paste(annSamplesDir, "/", annSamplesFolder, "/",sample2annotation[x, "sample_id"], "_annotatedWithGenCode_ReplTime.txt",sep=""), quote = "",sep="\t",header = TRUE, stringsAsFactors = FALSE)
@@ -150,6 +150,7 @@ summarizeMutAnnotation2SampleLevel <- function(sample2annotation, mut_type, genc
       
     } else{
       sample2annotation[x,paste("num_", mut_type,"_CDS",sep="")] <- 0
+      sample2annotation[x,paste("perc_", mut_type,"_CDS",sep="")] <- 0
       sample2annotation[x,paste("num_", mut_type,"_gene",sep="")] <- 0
       sample2annotation[x,paste("num_", mut_type,"_transcript",sep="")] <- 0
       sample2annotation[x,paste("num_", mut_type,"_exon",sep="")] <- 0
