@@ -4,7 +4,6 @@ library(Rsamtools)
 library(parallel)
 
 source("main_utils.R")
-options(scipen=999)
 
 ############################### 
 # Step 1: Compute 42 features #
@@ -99,6 +98,8 @@ options(scipen=999)
   #' @return data.frame with the statistics per sample
   getStatistics <- function(sample_info_file,vcfIsFiltered,recVcfIsFiltered,file_fastaGenome, num_cores)
   {
+    options(scipen=999)
+    
     sample_info <- read.table(file = sample_info_file, header=TRUE, sep = "\t", stringsAsFactors = FALSE)
     
     stats_samples <- do.call(rbind, mclapply(1:nrow(sample_info), function(x)

@@ -1,8 +1,6 @@
 library(rtracklayer)
 library(parallel)
 
-options(scipen=999)
-
 source("main_utils.R")
 
 #' Get the genes with a SSM/SIM ('mut_type') affecting the coding sequence

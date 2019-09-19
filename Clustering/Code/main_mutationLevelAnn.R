@@ -5,8 +5,6 @@ library(GenomicFeatures)
 library(rtracklayer)
 library(plyr)
 
-options(scipen=999)
-
 #' Combine multiple bigWig files with the replication time data into a single file.
 #' Data is downloaded from http://genome.ucsc.edu/cgi-bin/hgFileUi?db=hg19&g=wgEncodeUwRepliSeq - wavelet smoothed signal
 #' @param filenames_replication_time: list of filenames with replication time data (one file per cell line) 
