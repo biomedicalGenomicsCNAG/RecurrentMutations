@@ -160,7 +160,7 @@ HCPC objects containing the association of the features to the clusters at a spe
 </p>
 
 <strong>DATA:</strong> <br>
-Table with the samples and the clusters they are assigned to after clustering with (E) and without the recurrence-related features [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
+Table with the samples and the clusters they are assigned to after clustering without and with the recurrence-related features (C and D) [(TXT file)](Clustering/Data/Clustering_sample2clustRec2clustGen.txt) 
 
 
 
