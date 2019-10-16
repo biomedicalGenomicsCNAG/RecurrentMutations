@@ -152,10 +152,22 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 Table with the samples and the clusters they are assigned to at each cluster resolution (from 2 to 20 clusters) [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
 HCPC objects containing the association of the features to the clusters at a specific cluster resolution. ([Folder](Clustering/Data/HCPC_clustertree))
 
+
 <br>
-<h4>S2 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
+<h4>S2 Figure. PCA and clustering with and without the recurrence-related features.</h4>
 <p align="center">
   <img src="Figures/S2Fig.png" width="350" title="">
+</p>
+
+<strong>DATA:</strong> <br>
+Table with the samples and the clusters they are assigned to after clustering with (E) and without the recurrence-related features [(TXT file)](Clustering/Data/HierarchClust20_sample2clust.txt) 
+
+
+
+<br>
+<h4>S3 Figure. Enriched sequence motifs for C>G SSMs in cluster M.</h4>
+<p align="center">
+  <img src="Figures/S3Fig.png" width="350" title="">
 </p>
 
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
@@ -178,9 +190,9 @@ HCPC objects containing the association of the features to the clusters at a spe
 
 <br>
 
-<h4>S3 Figure. Enriched sequence motifs for T>G SSMs in cluster H.</h4>
+<h4>S4 Figure. Enriched sequence motifs for T>G SSMs in cluster H.</h4>
 <p align="center">
-  <img src="Figures/S3Fig.png" width="350" title="">
+  <img src="Figures/S4Fig.png" width="350" title="">
 </p>
 
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
