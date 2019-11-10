@@ -48,7 +48,7 @@
 * Generic functions ([RScript](Clustering/Code/main_utils.R)) <BR> 
 
 <br>
-<h4>Table 1: Key characteristics of the 16 clusters</h4>
+<h4>Fig 4: Key characteristics of the 16 clusters</h4>
 
 <p align="center">
   <img src="Figures/Table1_key_charact_clusters.png" width="350" title="">
@@ -61,7 +61,7 @@
 * Key characteristics and overall association to recurrence: HCPC object ([RData](Clustering/Data/res_hcpc.RData))
 
 <br>
-<h4>Fig 4. Overview of the 42 features and their association with each cluster</h4>
+<h4>Fig 5. Overview of the 42 features and their association with each cluster</h4>
 <p align="center">
   <img src="Figures/Fig4.png" width="350" title="">
 </p>
@@ -75,7 +75,7 @@ All significant associations between features and clusters ([RData](Clustering/D
 <strong>CODE:</strong><br>
 Correct the p-values for the results of the v tests (features versus clusters) for multiple testing and plot associations ([RScript](Clustering/Code/Fig4_feature_association_2_clusters.R)) <BR> <BR> 
   
-<h4>Fig 5. Enriched sequence motifs</h4> 
+<h4>Fig 6. Enriched sequence motifs</h4> 
 <p align="center">
   <img src="Figures/Fig5.png" width="350" title="">
 </p>  
@@ -135,7 +135,7 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 * Compute statistics for sequence motifs ([RScript](SequenceContext/Code/SequenceMotifsStats.R)) <br>
 
 <br>
-<h4>Fig 6. Factors impacting on recurrence in the context of the clusters</h4> 
+<h4>Fig 7. Factors impacting on recurrence in the context of the clusters</h4> 
 <p align="center">
   <img src="Figures/Fig6.png" width="350" title="">
 </p>
