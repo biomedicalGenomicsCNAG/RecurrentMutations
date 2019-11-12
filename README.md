@@ -51,7 +51,7 @@
 <h4>Fig 4: Key characteristics of the 16 clusters</h4>
 
 <p align="center">
-  <img src="Figures/Table1_key_charact_clusters.png" width="350" title="">
+  <img src="Figures/Table1_Fig4.png" width="350" title="">
 </p>
 
 <strong>DATA:</strong><br>
@@ -77,7 +77,7 @@ Correct the p-values for the results of the v tests (features versus clusters) f
   
 <h4>Fig 6. Enriched sequence motifs</h4> 
 <p align="center">
-  <img src="Figures/Fig5.png" width="350" title="">
+  <img src="Figures/Fig6.png" width="350" title="">
 </p>  
 
 <strong>METHOD:</strong> [Description](SequenceContext/Readme.md) <br>
@@ -137,7 +137,7 @@ Correct the p-values for the results of the v tests (features versus clusters) f
 <br>
 <h4>Fig 7. Factors impacting on recurrence in the context of the clusters</h4> 
 <p align="center">
-  <img src="Figures/Fig6.png" width="350" title="">
+  <img src="Figures/Fig7.png" width="350" title="">
 </p>
 
 <br>
