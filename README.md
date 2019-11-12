@@ -30,7 +30,7 @@
 <br>
 <h4>Fig 3. Workflow of the recurrence-based approach to group cancer genomes</h4>
 
-![alt text](Clustering/Fig3.png)
+![alt text](Figures/Fig3.png)
 
 <p><em>Note</em>: An interactive <strong>3D version of the PCA plot</strong> shown in Step 3 of the workflow is available <a href="https://plot.ly/~biomedicalGenomicsCNAG/1.embed">here</a>.</p>
 
