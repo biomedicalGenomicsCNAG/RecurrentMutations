@@ -17,10 +17,12 @@ source("pcawg.colour.palette.R")
 #' @return tiled_genome: genome divided into 'tiles/windows'
 getTiledGenome <- function(rec_ssms_file, rec_sims_file, avg_num_mut_in_tile, file_fastaGenome, num_cores)
 {
-  rec_ssms <- read.table(file = rec_ssms_file)
+  rec_ssms <- read.table(file = rec_ssms_file, header=TRUE, comment.char="")
+  colnames(rec_ssms)[1] <- "CHROM"
   rec_ssms$num_samples <- as.numeric(sub("rec_count=", "", rec_ssms$Count))
   
-  rec_sims <- read.table(file = rec_sims_file)
+  rec_sims <- read.table(file = rec_sims_file, header=TRUE, comment.char="")
+  colnames(rec_sims)[1] <- "CHROM"
   rec_sims$num_samples <- as.numeric(sub("rec_count=", "", rec_sims$Count))
   
   num_rec_mutations <- sum(rec_ssms$num_samples) + sum(rec_sims$num_samples)
@@ -35,7 +37,7 @@ getTiledGenome <- function(rec_ssms_file, rec_sims_file, avg_num_mut_in_tile, fi
   size_genome <- sum(as.numeric(length_chr))
   
   # determine tile size
-  tile_size <- ceiling((avg_num_mut_in_tile*size_genome) / num_mutations)
+  tile_size <- ceiling((avg_num_mut_in_tile*size_genome) / num_rec_mutations)
   
   # ensure the tile size is an even number
   if((tile_size %% 2) != 0)
@@ -139,11 +141,11 @@ matchMutations2TiledGenome <- function(rec_mutations_granges, tiled_genome)
 #' @param num_cores: number of cores to be used in mclapply 
 #'
 #' @return tiles linked to genes (a tile is linked to a single string of genes)
-collapseTileAnnotation <- function(tile2genAnn, num_cores)
+collapseTileAnnotation <- function(tile2genAnn, start, end, num_cores)
 {
    tile_indices <- unique(tile2genAnn$tile_index)
     
-   tile2genAnn_collapsed <- do.call(rbind, mclapply(tile_indices, function(x){
+   tile2genAnn_collapsed <- do.call(rbind, mclapply(tile_indices[start:end], function(x){
      
      cur_tiles <- tile2genAnn[which(tile2genAnn$tile_index == x),]
      cur_genes <- paste(unique(cur_tiles$gene_name), collapse= " | ")
@@ -219,12 +221,18 @@ plotTile2NumMut <- function(annotatedTiles2numMutations, th_numMut_geneAnn, file
 {
   colors_chr <- pcawg.colour.palette(sub("chr", "", unique(as.character(annotatedTiles2numMutations$seqnames))), "chromosomes")
   names(colors_chr) <-  unique(as.character(annotatedTiles2numMutations$seqnames))
-  
-  annotatedTiles2numMutations_filt <- annotatedTiles2numMutations[which(annotatedTiles2numMutations$num_mutations >= th_numMut_geneAnn), ]
+  chromosomes <- unique(as.character(annotatedTiles2numMutations$seqnames))
+                        
+  for(i in 1:length(chromosomes))
+  {
+  annotatedTiles2numMutations_filt <- annotatedTiles2numMutations[which(annotatedTiles2numMutations$num_mutations >= th_numMut_geneAnn & annotatedTiles2numMutations$seqnames == chromosomes[i]), ]
   annotatedTiles2numMutations_filt <- annotatedTiles2numMutations_filt[which(!(is.na(annotatedTiles2numMutations_filt$genes))),]
   
-  scatterplotTile2NumMut <- ggplot(aes(x=tile_index,y=num_mutations,  fill=seqnames),  data=annotatedTiles2numMutations) + scale_y_log10() +scale_fill_manual(values=colors_chr, name="chromosome") +  ylab("number of mutations") +   
+  annotatedTiles2numMutations_curChr <- annotatedTiles2numMutations[which(annotatedTiles2numMutations$seqnames==chromosomes[i]),]
+  
+  scatterplotTile2NumMut <- ggplot(aes(x=tile_index,y=num_mutations,  fill=seqnames),  data=annotatedTiles2numMutations_curChr) + scale_y_log10() +scale_fill_manual(values=colors_chr, name="chromosome") +  ylab("number of mutations") +   
     geom_point(size=2, shape=21) +  theme( axis.title.y=element_text(size=12), axis.title.x=element_blank(),axis.text.x =element_blank())  + annotation_logticks(sides = "l") + 
     geom_text(data=annotatedTiles2numMutations_filt, aes(x=tile_index, y=num_mutations, label=genes), size=2, vjust=-1)
-  ggsave(file=paste(resultsDir, "/", filename_plot, sep=""))
+  ggsave(file=paste(resultsDir, "/", filename_plot, "_", chromosomes[i], ".pdf", sep=""))
+  }
 }
