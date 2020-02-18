@@ -221,18 +221,12 @@ plotTile2NumMut <- function(annotatedTiles2numMutations, th_numMut_geneAnn, file
 {
   colors_chr <- pcawg.colour.palette(sub("chr", "", unique(as.character(annotatedTiles2numMutations$seqnames))), "chromosomes")
   names(colors_chr) <-  unique(as.character(annotatedTiles2numMutations$seqnames))
-  chromosomes <- unique(as.character(annotatedTiles2numMutations$seqnames))
-                        
-  for(i in 1:length(chromosomes))
-  {
-  annotatedTiles2numMutations_filt <- annotatedTiles2numMutations[which(annotatedTiles2numMutations$num_mutations >= th_numMut_geneAnn & annotatedTiles2numMutations$seqnames == chromosomes[i]), ]
+ 
+  annotatedTiles2numMutations_filt <- annotatedTiles2numMutations[which(annotatedTiles2numMutations$num_mutations >= th_numMut_geneAnn), ]
   annotatedTiles2numMutations_filt <- annotatedTiles2numMutations_filt[which(!(is.na(annotatedTiles2numMutations_filt$genes))),]
   
-  annotatedTiles2numMutations_curChr <- annotatedTiles2numMutations[which(annotatedTiles2numMutations$seqnames==chromosomes[i]),]
-  
-  scatterplotTile2NumMut <- ggplot(aes(x=tile_index,y=num_mutations,  fill=seqnames),  data=annotatedTiles2numMutations_curChr) + scale_y_log10() +scale_fill_manual(values=colors_chr, name="chromosome") +  ylab("number of mutations") +   
+  scatterplotTile2NumMut <- ggplot(aes(x=tile_index,y=num_mutations,  fill=seqnames),  data=annotatedTiles2numMutations) + scale_y_log10() +scale_fill_manual(values=colors_chr, name="chromosome") +  ylab("number of mutations") +   
     geom_point(size=2, shape=21) +  theme( axis.title.y=element_text(size=12), axis.title.x=element_blank(),axis.text.x =element_blank())  + annotation_logticks(sides = "l") + 
     geom_text(data=annotatedTiles2numMutations_filt, aes(x=tile_index, y=num_mutations, label=genes), size=2, vjust=-1)
-  ggsave(file=paste(resultsDir, "/", filename_plot, "_", chromosomes[i], ".pdf", sep=""))
-  }
+  ggsave(file=paste(resultsDir, "/", filename_plot, ".pdf", sep=""))
 }
